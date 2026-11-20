@@ -64,7 +64,15 @@ Les jeux locaux recherchent d’abord leur illustration sur IGDB à partir du no
 | `npm run lint` | Lancer Oxlint |
 | `npm test` | Lancer les tests unitaires des lecteurs de manifestes, illustrations et exécutables locaux |
 | `npm run build` | Vérifier les types et construire l’interface + processus Electron |
-| `npm run dist:win` | Produire l’application Windows portable dans `release/` |
+| `npm run dist:win` | Produire l’installateur Windows NSIS dans `release/` |
+| `npm run dist:portable` | Produire l’application Windows portable dans `release/` |
+| `npm run release:win` | Construire et publier une GitHub Release Windows |
+
+## Site de téléchargement
+
+Le site statique se trouve dans `website/`. Le workflow GitHub Pages le déploie sur chaque push à `main` qui modifie ce dossier. Dans les paramètres du dépôt, sélectionnez **Pages → Build and deployment → GitHub Actions** si Pages n’est pas encore activé.
+
+Le bouton de téléchargement récupère la dernière release publique et son installateur Windows directement depuis GitHub. Il reste indisponible jusqu’à la publication d’une première version NSIS. Pour publier une version, incrémentez `version` dans `package.json`, poussez un tag correspondant (par exemple `v0.1.1`) et le workflow `release.yml` construira et publiera l’installateur.
 
 ## Architecture
 
@@ -78,6 +86,6 @@ Les jeux locaux recherchent d’abord leur illustration sur IGDB à partir du no
 
 ## Limites et vérifications
 
-Les tests automatisés couvrent le parseur KeyValues utilisé pour les fichiers Steam. Le build de production vérifie TypeScript et Vite. Le build NSIS a été essayé; `makensis` échoue dans cet environnement lorsqu’il cherche le binaire temporaire de désinstallation, donc la commande de livraison produit une application Windows portable à la place. Un lancement de jeu dépend de Steam, du compte local et du jeu concerné : Nexora ne peut pas confirmer que la fenêtre du jeu s’est effectivement ouverte; l’historique est enregistré après acceptation de l’URI de lancement par le système pour les jeux installés.
+Les tests automatisés couvrent les lecteurs de manifestes, les illustrations et les exécutables locaux. Le build de production vérifie TypeScript et Vite. Les installations NSIS sont destinées à l’auto-mise à jour; la version portable est distribuée séparément et ne reçoit pas les mises à jour automatiques intégrées. Un lancement de jeu dépend de Steam, du compte local et du jeu concerné : Nexora ne peut pas confirmer que la fenêtre du jeu s’est effectivement ouverte; l’historique est enregistré après acceptation de l’URI de lancement par le système pour les jeux installés.
 
 La synchronisation est répétable et met à jour les jeux Steam connus sans les supprimer quand Steam ou une source est indisponible. Les jeux ne sont jamais inventés ou regroupés simplement parce que leurs noms se ressemblent.
