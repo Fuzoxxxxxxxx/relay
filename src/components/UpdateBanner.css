@@ -1,0 +1,41 @@
+.update-banner {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(8px);
+}
+
+.update-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.update-row > span {
+  flex: 1;
+  min-width: 0;
+}
+
+.update-progress {
+  height: 4px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.update-progress > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: currentColor;
+  transition: width 0.25s ease;
+}
+
+[data-motion='reduced'] .update-progress > span {
+  transition: none;
+}

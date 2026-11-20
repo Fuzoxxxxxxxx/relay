@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+:root {
+  font-family: "Segoe UI Variable Text", "Segoe UI", Inter, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.45;
+  color-scheme: dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+
+  --display: "Bahnschrift", "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
+  --bg: #07080c;
+  --bg-2: #0d0f16;
+  --surface: #13161f;
+  --surface-2: #1a1e2a;
+  --surface-3: #242938;
+  --glass: rgba(16, 19, 28, 0.72);
+  --line: #232837;
+  --line-2: #323951;
+  --text: #eef0f7;
+  --text-2: #aab1c6;
+  --text-3: #7b849b;
+  --accent: #8b6bff;
+  --accent-2: #a58dff;
+  --accent-ink: #ffffff;
+  --accent-soft: rgba(139, 107, 255, 0.16);
+  --cyan: #38e1d0;
+  --green: #3fd896;
+  --red: #ff6372;
+  --amber: #ffc767;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  overflow: hidden;
+  color: var(--text);
+  background: var(--bg);
+}
+
+h1, h2, h3, p { margin: 0; }
+button, input, select { font: inherit; }
+button { color: inherit; }
+img { -webkit-user-drag: none; }
+
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+::selection { background: rgba(139, 107, 255, 0.4); }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { border: 2px solid transparent; border-radius: 99px; background: #2c3247 content-box; background-clip: content-box; }
+::-webkit-scrollbar-thumb:hover { background: #4a5372 content-box; background-clip: content-box; }
+input[type="search"]::-webkit-search-cancel-button { display: none; }
+
+/* Animations réduites : réglage de Nexora (ou de Windows par défaut), posé par l'application sur <html data-motion>. */
+:root[data-motion="reduced"] *, :root[data-motion="reduced"] *::before, :root[data-motion="reduced"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+/* Les indicateurs de chargement restent animés : sans eux, rien n'indique qu'une opération est en cours. */
+:root[data-motion="reduced"] .spin { animation-duration: 1.2s !important; animation-iteration-count: infinite !important; }

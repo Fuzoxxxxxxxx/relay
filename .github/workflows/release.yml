@@ -1,0 +1,29 @@
+name: Release
+
+# Se déclenche quand un tag de version est poussé (ex. v0.2.0) :
+# build de l'installeur Windows, puis publication sur GitHub Releases
+# (installeur + latest.yml + blockmap utilisés par la mise à jour automatique).
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run release:win
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
