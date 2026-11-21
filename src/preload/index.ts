@@ -1,7 +1,7 @@
 import { contextBridge, ipcRenderer, webUtils } from 'electron'
-import type { AppSettings, ArtworkKind, NexoraApi, SyncProgress, UpdateState } from '../shared/types'
+import type { AppSettings, ArtworkKind, RelayApi, SyncProgress, UpdateState } from '../shared/types'
 
-const api: NexoraApi = {
+const api: RelayApi = {
   library: {
     list: () => ipcRenderer.invoke('library:list'),
     recents: () => ipcRenderer.invoke('library:recents'),
@@ -81,4 +81,4 @@ const api: NexoraApi = {
   },
 }
 
-contextBridge.exposeInMainWorld('nexora', api)
+contextBridge.exposeInMainWorld('relay', api)

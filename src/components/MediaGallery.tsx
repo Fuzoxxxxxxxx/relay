@@ -19,7 +19,7 @@ function useMediaImage(gameId: string, id: string, size: 'thumb' | 'full', enabl
   useEffect(() => {
     if (!enabled) return
     let cancelled = false
-    window.nexora.media.image(gameId, id, size)
+    window.relay.media.image(gameId, id, size)
       .then((url) => { if (!cancelled) setState({ key, url, failed: url === null }) })
       .catch(() => { if (!cancelled) setState({ key, url: null, failed: true }) })
     return () => { cancelled = true }
@@ -102,7 +102,7 @@ export function MediaGallery({ gameId, version, onError }: MediaGalleryProps) {
   useEffect(() => {
     let cancelled = false
     setOpenIndex(null)
-    window.nexora.media.list(gameId)
+    window.relay.media.list(gameId)
       .then((media) => { if (!cancelled) setLoaded({ key, media }) })
       .catch(() => { if (!cancelled) setLoaded({ key, media: { screenshots: [], videos: [] } }) })
     return () => { cancelled = true }
@@ -112,7 +112,7 @@ export function MediaGallery({ gameId, version, onError }: MediaGalleryProps) {
   if (!media || (media.screenshots.length === 0 && media.videos.length === 0)) return null
 
   function playVideo(id: string): void {
-    window.nexora.media.openVideo(gameId, id).catch(() => onError('La vidéo n’a pas pu être ouverte.'))
+    window.relay.media.openVideo(gameId, id).catch(() => onError('La vidéo n’a pas pu être ouverte.'))
   }
 
   return (

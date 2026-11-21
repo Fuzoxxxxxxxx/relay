@@ -46,7 +46,7 @@ describe('Epic Games manifest parser', () => {
   })
 
   it('reads official cover and hero art from the Epic launcher catalog cache', async () => {
-    temporaryDirectory = await mkdtemp(path.join(os.tmpdir(), 'nexora-epic-catalog-'))
+    temporaryDirectory = await mkdtemp(path.join(os.tmpdir(), 'relay-epic-catalog-'))
     const cacheDirectory = path.join(temporaryDirectory, 'Epic', 'EpicGamesLauncher', 'Data', 'Catalog')
     await mkdir(cacheDirectory, { recursive: true })
     const products = [

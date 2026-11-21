@@ -37,7 +37,7 @@ export function SettingsPage({ settings, onSettingsChange, onUpdateSetting, onTo
   async function saveSteam(): Promise<void> {
     setSavingSteam(true)
     try {
-      onSettingsChange(await window.nexora.settings.saveSteamCredentials(steamId.trim(), apiKey.trim()))
+      onSettingsChange(await window.relay.settings.saveSteamCredentials(steamId.trim(), apiKey.trim()))
       setApiKey('')
       onToast('Accès Steam Web API enregistré de manière chiffrée')
     } catch (error) {
@@ -49,7 +49,7 @@ export function SettingsPage({ settings, onSettingsChange, onUpdateSetting, onTo
 
   async function clearSteam(): Promise<void> {
     try {
-      onSettingsChange(await window.nexora.settings.clearSteamCredentials())
+      onSettingsChange(await window.relay.settings.clearSteamCredentials())
       setApiKey('')
       onToast('Identifiants Steam supprimés')
     } catch (error) {
@@ -60,7 +60,7 @@ export function SettingsPage({ settings, onSettingsChange, onUpdateSetting, onTo
   async function saveIgdb(): Promise<void> {
     setSavingIgdb(true)
     try {
-      onSettingsChange(await window.nexora.settings.saveIgdbCredentials(igdbClientId.trim(), igdbSecret.trim()))
+      onSettingsChange(await window.relay.settings.saveIgdbCredentials(igdbClientId.trim(), igdbSecret.trim()))
       setIgdbSecret('')
       onArtworkReset()
       onToast('Identifiants IGDB vérifiés et enregistrés de manière chiffrée')
@@ -73,7 +73,7 @@ export function SettingsPage({ settings, onSettingsChange, onUpdateSetting, onTo
 
   async function clearIgdb(): Promise<void> {
     try {
-      onSettingsChange(await window.nexora.settings.clearIgdbCredentials())
+      onSettingsChange(await window.relay.settings.clearIgdbCredentials())
       setIgdbSecret('')
       onArtworkReset()
       onToast('Identifiants IGDB supprimés')
@@ -85,7 +85,7 @@ export function SettingsPage({ settings, onSettingsChange, onUpdateSetting, onTo
   async function saveSteamGridDb(): Promise<void> {
     setSavingSgdb(true)
     try {
-      onSettingsChange(await window.nexora.settings.saveSteamGridDbKey(sgdbKey.trim()))
+      onSettingsChange(await window.relay.settings.saveSteamGridDbKey(sgdbKey.trim()))
       setSgdbKey('')
       onArtworkReset()
       onToast('Clé SteamGridDB vérifiée et enregistrée de manière chiffrée')
@@ -98,7 +98,7 @@ export function SettingsPage({ settings, onSettingsChange, onUpdateSetting, onTo
 
   async function clearSteamGridDb(): Promise<void> {
     try {
-      onSettingsChange(await window.nexora.settings.clearSteamGridDbKey())
+      onSettingsChange(await window.relay.settings.clearSteamGridDbKey())
       setSgdbKey('')
       onArtworkReset()
       onToast('Clé SteamGridDB supprimée')
@@ -110,7 +110,7 @@ export function SettingsPage({ settings, onSettingsChange, onUpdateSetting, onTo
   async function saveDeepL(): Promise<void> {
     setSavingDeepL(true)
     try {
-      onSettingsChange(await window.nexora.settings.saveDeepLKey(deepLKey.trim()))
+      onSettingsChange(await window.relay.settings.saveDeepLKey(deepLKey.trim()))
       setDeepLKey('')
       onToast('Clé DeepL vérifiée et enregistrée de manière chiffrée')
     } catch (error) {
@@ -122,7 +122,7 @@ export function SettingsPage({ settings, onSettingsChange, onUpdateSetting, onTo
 
   async function clearDeepL(): Promise<void> {
     try {
-      onSettingsChange(await window.nexora.settings.clearDeepLKey())
+      onSettingsChange(await window.relay.settings.clearDeepLKey())
       setDeepLKey('')
       onToast('Clé DeepL supprimée')
     } catch (error) {
@@ -132,7 +132,7 @@ export function SettingsPage({ settings, onSettingsChange, onUpdateSetting, onTo
 
   async function chooseCacheDirectory(): Promise<void> {
     try {
-      onSettingsChange(await window.nexora.settings.chooseCacheDirectory())
+      onSettingsChange(await window.relay.settings.chooseCacheDirectory())
       onToast('Dossier de cache mis à jour')
     } catch (error) {
       onError(messageOf(error, 'Le dossier de cache n’a pas pu être modifié.'))
@@ -142,7 +142,7 @@ export function SettingsPage({ settings, onSettingsChange, onUpdateSetting, onTo
   async function refreshAllArtwork(): Promise<void> {
     setRefreshing(true)
     try {
-      const count = await window.nexora.artwork.refreshAll()
+      const count = await window.relay.artwork.refreshAll()
       onArtworkReset()
       onToast(`Illustrations réinitialisées pour ${count} jeu${count > 1 ? 'x' : ''} (vos images personnalisées sont conservées)`)
     } catch (error) {
@@ -205,12 +205,12 @@ export function SettingsPage({ settings, onSettingsChange, onUpdateSetting, onTo
             </select>
           </div>
           <div className="setting">
-            <div><strong>Lancer au démarrage</strong><small>Ouvrir Nexora avec Windows</small></div>
+            <div><strong>Lancer au démarrage</strong><small>Ouvrir Relay avec Windows</small></div>
             <button
               className="switch"
               role="switch"
               aria-checked={settings.launchAtStartup}
-              aria-label="Lancer Nexora au démarrage de Windows"
+              aria-label="Lancer Relay au démarrage de Windows"
               onClick={() => void onUpdateSetting('launchAtStartup', !settings.launchAtStartup)}
             ><span /></button>
           </div>
@@ -262,7 +262,7 @@ export function SettingsPage({ settings, onSettingsChange, onUpdateSetting, onTo
 
         <section className="panel">
           <div className="panel-head"><span className="panel-icon sgdb"><ImageIcon size={18} /></span><div><h2>SteamGridDB</h2><p>Jaquettes et bannières de la communauté</p></div></div>
-          <div className="notice"><ShieldCheck size={16} /><span>La clé est vérifiée puis chiffrée avec le stockage sécurisé de Windows. Nexora n’accepte que des images sans contenu adulte ni humoristique.</span></div>
+          <div className="notice"><ShieldCheck size={16} /><span>La clé est vérifiée puis chiffrée avec le stockage sécurisé de Windows. Relay n’accepte que des images sans contenu adulte ni humoristique.</span></div>
           <label className="field"><span>Clé d’API SteamGridDB</span><input value={sgdbKey} onChange={(event) => setSgdbKey(event.target.value)} type="password" autoComplete="new-password" placeholder={settings.hasSteamGridDbKey ? 'Clé enregistrée — saisir pour remplacer' : 'Clé de votre profil SteamGridDB'} maxLength={64} /></label>
           <div className="panel-actions">
             <button className="btn btn-primary" disabled={savingSgdb || !sgdbKey} onClick={() => void saveSteamGridDb()}>
@@ -290,7 +290,7 @@ export function SettingsPage({ settings, onSettingsChange, onUpdateSetting, onTo
       </div>
 
       <section className="panel integrations">
-        <h2>Comment Nexora trouve images et descriptions</h2>
+        <h2>Comment Relay trouve images et descriptions</h2>
         <p>Chaque plateforme a ses propres sources. <strong>Steam</strong> : identifiant officiel (visuels de la bibliothèque Steam, description française du magasin), puis <strong>SteamGridDB</strong> et <strong>IGDB</strong> en complément. <strong>Epic</strong> : namespace identifié via <strong>egdata</strong> uniquement (images et description). <strong>Riot</strong> : visuel officiel, puis <strong>egdata</strong>, puis IGDB / SteamGridDB. <strong>Jeux locaux</strong> : IGDB, Steam et SteamGridDB par nom identique. Si rien n’est sûr, rien n’est deviné et vous pouvez choisir le bon jeu depuis sa fiche. Toutes les descriptions sont affichées en français (traduction DeepL si besoin).</p>
       </section>
     </section>

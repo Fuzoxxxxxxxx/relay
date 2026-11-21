@@ -62,7 +62,7 @@ export class UpdateService {
       this.set({ status: 'downloaded', version: event.version, percent: 100, error: null, checkedAt: new Date().toISOString() })
     })
     autoUpdater.on('error', (error: Error) => {
-      console.error('Nexora — erreur de mise à jour :', error)
+      console.error('Relay — erreur de mise à jour :', error)
       // Une mise à jour déjà téléchargée reste installable malgré une erreur réseau ultérieure.
       if (this.state.status === 'downloaded') return
       this.set({ status: 'error', error: friendlyError(error) })

@@ -145,7 +145,7 @@ export interface UpdateState {
   checkedAt: string | null
 }
 
-export interface NexoraApi {
+export interface RelayApi {
   library: {
     list: () => Promise<GameRecord[]>
     recents: () => Promise<RecentGame[]>
@@ -199,7 +199,7 @@ export interface NexoraApi {
   update: {
     getState: () => Promise<UpdateState>
     check: () => Promise<UpdateState>
-    /** Redémarre Nexora et installe la mise à jour déjà téléchargée. */
+    /** Redémarre Relay et installe la mise à jour déjà téléchargée. */
     install: () => Promise<void>
     onState: (listener: (state: UpdateState) => void) => () => void
   }

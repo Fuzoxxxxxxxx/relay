@@ -19,7 +19,7 @@ function describe(state: UpdateState): string {
     case 'downloaded':
       return `La version ${state.version} est prête à être installée.`
     case 'up-to-date':
-      return 'Nexora est à jour.'
+      return 'Relay est à jour.'
     case 'error':
       return state.error ?? 'La recherche de mise à jour a échoué.'
     default:
@@ -37,8 +37,8 @@ export function UpdatePanel({ onToast, onError }: UpdatePanelProps) {
 
   async function check(): Promise<void> {
     try {
-      const result = await window.nexora.update.check()
-      if (result.status === 'up-to-date') onToast('Nexora est à jour')
+      const result = await window.relay.update.check()
+      if (result.status === 'up-to-date') onToast('Relay est à jour')
     } catch (error) {
       onError(error instanceof Error ? error.message : 'La recherche de mise à jour a échoué.')
     }
@@ -47,7 +47,7 @@ export function UpdatePanel({ onToast, onError }: UpdatePanelProps) {
   async function install(): Promise<void> {
     setInstalling(true)
     try {
-      await window.nexora.update.install()
+      await window.relay.update.install()
     } catch (error) {
       setInstalling(false)
       onError(error instanceof Error ? error.message : 'La mise à jour n’a pas pu être installée.')
@@ -58,7 +58,7 @@ export function UpdatePanel({ onToast, onError }: UpdatePanelProps) {
     <section className="panel">
       <div className="panel-head"><span className="panel-icon"><Download size={18} /></span><div><h2>Mises à jour</h2><p>Version installée : {state.currentVersion}</p></div></div>
       <div className="setting">
-        <div><strong>{describe(state)}</strong><small>Les mises à jour se téléchargent en arrière-plan et s’installent à la fermeture de Nexora.</small></div>
+        <div><strong>{describe(state)}</strong><small>Les mises à jour se téléchargent en arrière-plan et s’installent à la fermeture de Relay.</small></div>
         {state.status === 'downloaded' ? (
           <button className="btn btn-primary" disabled={installing} onClick={() => void install()}>
             {installing ? <LoaderCircle size={15} className="spin" /> : <RefreshCw size={15} />}Redémarrer et installer

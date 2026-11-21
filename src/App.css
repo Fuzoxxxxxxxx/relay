@@ -13,7 +13,8 @@
 .titlebar { display: flex; flex: 0 0 40px; align-items: center; gap: 18px; height: 40px; padding-left: 16px; background: var(--bg); user-select: none; }
 .titlebar-brand { display: flex; align-items: center; gap: 10px; width: 52px; font-family: var(--display); font-size: 0; }
 .titlebar-brand span:last-child { display: none; }
-.brand-mark { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; background: linear-gradient(135deg, var(--accent), var(--cyan)); color: #fff; font-family: var(--display); font-size: 15px; font-weight: 800; line-height: 1; }
+.brand-mark { display: grid; place-items: center; width: 26px; height: 26px; }
+.brand-mark svg { width: 26px; height: 26px; }
 .titlebar-search { display: flex; align-items: center; gap: 9px; width: min(480px, 44vw); height: 28px; padding: 0 10px; border: 1px solid var(--line); border-radius: 99px; background: var(--bg-2); color: var(--text-3); -webkit-app-region: no-drag; transition: border-color 0.12s, background 0.12s; }
 .titlebar-search:focus-within { border-color: var(--accent); background: var(--surface); }
 .titlebar-search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--text); font-size: 13px; }

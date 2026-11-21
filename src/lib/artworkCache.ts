@@ -20,7 +20,7 @@ export function loadArtwork(
     cache.set(key, hit)
     return hit
   }
-  const pending = window.nexora.artwork.load(platform, appId, title, kind).then(
+  const pending = window.relay.artwork.load(platform, appId, title, kind).then(
     (url) => {
       if (!url) cache.delete(key)
       return url

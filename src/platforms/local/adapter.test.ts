@@ -12,7 +12,7 @@ afterEach(async () => {
 })
 
 async function createTemporaryDirectory(): Promise<string> {
-  temporaryDirectory = await mkdtemp(path.join(os.tmpdir(), 'nexora-local-game-'))
+  temporaryDirectory = await mkdtemp(path.join(os.tmpdir(), 'relay-local-game-'))
   return temporaryDirectory
 }
 

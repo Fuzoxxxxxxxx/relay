@@ -1,8 +1,8 @@
-import type { NexoraApi } from './shared/types'
+import type { RelayApi } from './shared/types'
 
 declare global {
   interface Window {
-    nexora: NexoraApi
+    relay: RelayApi
   }
 }
 

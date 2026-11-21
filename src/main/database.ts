@@ -33,21 +33,27 @@ async function getDatabase(): Promise<Database> {
 
 async function initializeDatabase(): Promise<Database> {
   await mkdir(app.getPath('userData'), { recursive: true })
-  databasePath = path.join(app.getPath('userData'), 'nexora.sqlite')
+  databasePath = path.join(app.getPath('userData'), 'relay.sqlite')
+  const legacyDatabasePath = path.join(app.getPath('userData'), 'nexora.sqlite')
   sqlModule ??= await initSqlJs({
     locateFile: (file) => require.resolve(`sql.js/dist/${file}`),
   })
+  let bytes: Buffer | undefined
   try {
-    const bytes = await readFile(databasePath)
-    database = new sqlModule.Database(bytes)
+    bytes = await readFile(databasePath)
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
-    database = new sqlModule.Database()
+    try {
+      bytes = await readFile(legacyDatabasePath)
+    } catch (legacyError) {
+      if ((legacyError as NodeJS.ErrnoException).code !== 'ENOENT') throw legacyError
+    }
   }
+  database = bytes !== undefined ? new sqlModule.Database(bytes) : new sqlModule.Database()
 
   database.run('PRAGMA foreign_keys = ON')
   const currentSchema = readRows<{ user_version: number }>(database, 'PRAGMA user_version')[0]?.user_version ?? 0
-  if (currentSchema > 3) throw new Error(`La base Nexora utilise une version de schéma non prise en charge (${currentSchema}).`)
+  if (currentSchema > 3) throw new Error(`La base Relay utilise une version de schéma non prise en charge (${currentSchema}).`)
   if (currentSchema < 1) {
     database.run(`
       CREATE TABLE IF NOT EXISTS games (

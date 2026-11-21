@@ -7,12 +7,12 @@ export function useUpdateState(): UpdateState | null {
 
   useEffect(() => {
     let active = true
-    window.nexora.update.getState()
+    window.relay.update.getState()
       .then((initial) => {
         if (active) setState((current) => current ?? initial)
       })
       .catch(() => undefined)
-    const unsubscribe = window.nexora.update.onState((next) => {
+    const unsubscribe = window.relay.update.onState((next) => {
       if (active) setState(next)
     })
     return () => {

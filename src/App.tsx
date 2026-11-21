@@ -131,10 +131,10 @@ export default function App() {
 
   useEffect(() => {
     let active = true
-    const unsubscribe = window.nexora.library.onSyncProgress((progress) => {
+    const unsubscribe = window.relay.library.onSyncProgress((progress) => {
       if (active) setSyncProgress(progress)
     })
-    Promise.all([window.nexora.library.list(), window.nexora.library.recents(), window.nexora.settings.get()])
+    Promise.all([window.relay.library.list(), window.relay.library.recents(), window.relay.settings.get()])
       .then(([loadedGames, loadedRecents, loadedSettings]) => {
         if (!active) return
         setGames(loadedGames)
@@ -254,7 +254,7 @@ export default function App() {
       return
     }
     let cancelled = false
-    window.nexora.metadata.get(featuredId)
+    window.relay.metadata.get(featuredId)
       .then((details) => {
         if (!cancelled) setFeaturedDetails(details)
       })
@@ -286,8 +286,8 @@ export default function App() {
 
   async function reloadLibrary(): Promise<void> {
     const [loadedGames, loadedRecents] = await Promise.all([
-      window.nexora.library.list(),
-      window.nexora.library.recents(),
+      window.relay.library.list(),
+      window.relay.library.recents(),
     ])
     setGames(loadedGames)
     setRecents(loadedRecents)
@@ -334,7 +334,7 @@ export default function App() {
     setSyncSummary(null)
     setSyncProgress({ stage: 'Préparation de la synchronisation', completed: 0, total: 5 })
     try {
-      const result = await window.nexora.library.sync()
+      const result = await window.relay.library.sync()
       await reloadLibrary()
       setSyncSummary(result)
       setPlatformStatuses(result.platforms)
@@ -351,7 +351,7 @@ export default function App() {
 
   async function toggleFavorite(game: GameRecord): Promise<void> {
     try {
-      replaceGame(await window.nexora.library.toggleFavorite(game.id))
+      replaceGame(await window.relay.library.toggleFavorite(game.id))
     } catch (favoriteError) {
       setError(messageOf(favoriteError, 'Le favori n’a pas pu être enregistré.'))
     }
@@ -362,7 +362,7 @@ export default function App() {
     setLaunchingId(game.id)
     setError('')
     try {
-      await window.nexora.library.launch(game.id)
+      await window.relay.library.launch(game.id)
       await reloadLibrary()
       setToast(game.installed
         ? `Lancement de ${game.title} transmis à ${game.platformLabel}`
@@ -376,7 +376,7 @@ export default function App() {
 
   function toggleHidden(game: GameRecord): Promise<boolean> {
     return runAction(async () => {
-      const updated = await window.nexora.library.setHidden(game.id, !game.hidden)
+      const updated = await window.relay.library.setHidden(game.id, !game.hidden)
       replaceGame(updated)
       setToast(updated.hidden ? `${updated.title} est masqué (filtre « Masqués »)` : `${updated.title} est de nouveau visible`)
     }, 'Le jeu n’a pas pu être masqué.')
@@ -384,7 +384,7 @@ export default function App() {
 
   function renameGame(game: GameRecord, title: string | null): Promise<boolean> {
     return runAction(async () => {
-      const updated = await window.nexora.library.rename(game.id, title)
+      const updated = await window.relay.library.rename(game.id, title)
       artworkChanged(updated)
       replaceGame(updated)
       setToast(title === null ? 'Nom d’origine rétabli' : `Jeu renommé en « ${updated.title} »`)
@@ -392,12 +392,12 @@ export default function App() {
   }
 
   function openFolder(game: GameRecord): Promise<boolean> {
-    return runAction(() => window.nexora.library.openFolder(game.id), 'Le dossier n’a pas pu être ouvert.')
+    return runAction(() => window.relay.library.openFolder(game.id), 'Le dossier n’a pas pu être ouvert.')
   }
 
   function uninstall(game: GameRecord): Promise<boolean> {
     return runAction(async () => {
-      await window.nexora.library.uninstall(game.id)
+      await window.relay.library.uninstall(game.id)
       setToast('Désinstallation proposée dans Steam')
     }, 'La désinstallation n’a pas pu être demandée.')
   }
@@ -415,17 +415,17 @@ export default function App() {
 
   function removeLocal(game: GameRecord): Promise<boolean> {
     return runAction(async () => {
-      const removed = await window.nexora.library.removeLocalGame(game.id)
+      const removed = await window.relay.library.removeLocalGame(game.id)
       if (!removed) return
       await reloadLibrary()
       setSelectedId(null)
-      setToast(`${game.title} retiré de Nexora`)
+      setToast(`${game.title} retiré de Relay`)
     }, 'Le jeu local n’a pas pu être retiré de la bibliothèque.')
   }
 
   function confirmRemoveLocal(game: GameRecord): void {
     setConfirmation({
-      title: 'Retirer ce jeu de Nexora ?',
+      title: 'Retirer ce jeu de Relay ?',
       message: `« ${game.title} » sera retiré de votre bibliothèque locale. Ses fichiers sur l’ordinateur ne seront pas supprimés.`,
       confirmLabel: 'Retirer',
       cancelLabel: 'Annuler',
@@ -438,7 +438,7 @@ export default function App() {
     return runAction(async () => {
       const artworkPlatform = toArtworkPlatform(game.platform)
       if (!artworkPlatform) return
-      const chosen = await window.nexora.artwork.chooseCustom(artworkPlatform, game.externalId, kind)
+      const chosen = await window.relay.artwork.chooseCustom(artworkPlatform, game.externalId, kind)
       if (!chosen) return
       artworkChanged(game)
       setToast(kind === 'cover' ? 'Jaquette personnalisée enregistrée' : 'Bannière personnalisée enregistrée')
@@ -449,7 +449,7 @@ export default function App() {
     return runAction(async () => {
       const artworkPlatform = toArtworkPlatform(game.platform)
       if (!artworkPlatform) return
-      await window.nexora.artwork.clearCustom(artworkPlatform, game.externalId)
+      await window.relay.artwork.clearCustom(artworkPlatform, game.externalId)
       artworkChanged(game)
       setToast('Images personnalisées retirées')
     }, 'Les images personnalisées n’ont pas pu être retirées.')
@@ -459,7 +459,7 @@ export default function App() {
     return runAction(async () => {
       const artworkPlatform = toArtworkPlatform(game.platform)
       if (!artworkPlatform) return
-      await window.nexora.artwork.refresh(artworkPlatform, game.externalId, game.title)
+      await window.relay.artwork.refresh(artworkPlatform, game.externalId, game.title)
       artworkChanged(game)
       setToast('Recherche d’images relancée')
     }, 'Actualisation impossible.')
@@ -472,7 +472,7 @@ export default function App() {
     setImporting(true)
     setError('')
     try {
-      const { games: imported, created, errors } = await window.nexora.library.importLocalExecutables(paths)
+      const { games: imported, created, errors } = await window.relay.library.importLocalExecutables(paths)
       if (imported.length > 0) {
         await reloadLibrary()
         setView('library')
@@ -496,7 +496,7 @@ export default function App() {
     const executables: string[] = []
     for (const file of Array.from(files)) {
       if (!file.name.toLocaleLowerCase('fr').endsWith('.exe')) continue
-      const filePath = window.nexora.library.getDroppedFilePath(file)
+      const filePath = window.relay.library.getDroppedFilePath(file)
       if (filePath) executables.push(filePath)
     }
     if (executables.length === 0) {
@@ -568,7 +568,7 @@ export default function App() {
 
   async function updateSetting<K extends keyof UpdatableSettings>(key: K, value: UpdatableSettings[K]): Promise<void> {
     try {
-      setSettings(await window.nexora.settings.update({ [key]: value }))
+      setSettings(await window.relay.settings.update({ [key]: value }))
     } catch (settingsError) {
       setError(messageOf(settingsError, 'Le paramètre n’a pas pu être enregistré.'))
     }
@@ -719,7 +719,7 @@ export default function App() {
                 {emptyLibrary ? (
                   <section className="welcome">
                     <div className="welcome-copy">
-                      <span className="eyebrow">Bienvenue sur Nexora</span>
+                      <span className="eyebrow">Bienvenue sur Relay</span>
                       <h1>Tous vos jeux, au même endroit.</h1>
                       <p>Importez les jeux installés depuis Steam, Epic Games et Riot Games, ou ajoutez n’importe quel programme .exe. Chaque jeu reçoit sa vraie description et ses bonnes images, sans rien deviner.</p>
                       <div className="welcome-actions">
@@ -819,7 +819,7 @@ export default function App() {
                     <span className="dropzone-icon"><Upload size={22} /></span>
                     <div>
                       <strong>Ajoutez vos jeux locaux</strong>
-                      <span>Glissez un ou plusieurs fichiers .exe n’importe où dans la fenêtre. Nexora cherche le jeu par nom exact ; vous pourrez corriger la correspondance depuis sa fiche.</span>
+                      <span>Glissez un ou plusieurs fichiers .exe n’importe où dans la fenêtre. Relay cherche le jeu par nom exact ; vous pourrez corriger la correspondance depuis sa fiche.</span>
                     </div>
                     <button className="btn" disabled={importing} onClick={() => void importLocalGames()}>
                       {importing ? <LoaderCircle size={15} className="spin" /> : <FolderOpen size={15} />}Choisir des .exe

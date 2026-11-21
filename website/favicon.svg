@@ -1,5 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
-  <rect width="48" height="48" rx="14" fill="#8061EB"/>
-  <path d="M12 35V13l24 22V13" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="m29 13 7 7" stroke="#38E1D0" stroke-width="5" stroke-linecap="round"/>
+  <defs>
+    <linearGradient id="relay" x1="4" y1="4" x2="43" y2="44" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#B9F36B"/>
+      <stop offset="1" stop-color="#7F70FF"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="44" height="44" rx="14" fill="#121713"/>
+  <path d="M14 36V12h11a7 7 0 0 1 0 14H14m11 0 10 10" stroke="url(#relay)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

@@ -105,7 +105,7 @@ export class EgDataClient {
     if (cached && cached.expiresAt > Date.now()) return cached.result
     const result = (async () => {
       const response = await fetch(`${baseUrl}${pathAndQuery}`, {
-        headers: { Accept: 'application/json', 'User-Agent': 'Nexora (bibliothèque de jeux locale)' },
+        headers: { Accept: 'application/json', 'User-Agent': 'Relay (bibliothèque de jeux locale)' },
         signal: AbortSignal.timeout(8_000),
       })
       if (response.status === 404 || response.status === 204) return []
@@ -135,7 +135,7 @@ export class EgDataClient {
     if (!/^[A-Za-z0-9_-]{8,64}$/.test(id)) return null
     try {
       const response = await fetch(`${baseUrl}/offers/${encodeURIComponent(id)}`, {
-        headers: { Accept: 'application/json', 'User-Agent': 'Nexora (bibliothèque de jeux locale)' },
+        headers: { Accept: 'application/json', 'User-Agent': 'Relay (bibliothèque de jeux locale)' },
         signal: AbortSignal.timeout(8_000),
       })
       if (response.ok) {
@@ -159,7 +159,7 @@ export class EgDataClient {
     const empty: EgDataMedia = { images: [], videos: [] }
     if (!/^[A-Za-z0-9_-]{8,64}$/.test(offerId)) return empty
     const response = await fetch(`${baseUrl}/offers/${encodeURIComponent(offerId)}/media`, {
-      headers: { Accept: 'application/json', 'User-Agent': 'Nexora (bibliothèque de jeux locale)' },
+      headers: { Accept: 'application/json', 'User-Agent': 'Relay (bibliothèque de jeux locale)' },
       signal: AbortSignal.timeout(8_000),
     })
     if (response.status === 404 || response.status === 204 || !response.ok) return empty

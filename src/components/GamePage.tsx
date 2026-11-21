@@ -55,7 +55,7 @@ function describeMatch(match: GameMatch): { tone: 'ok' | 'warn' | 'none'; title:
     return {
       tone: 'none',
       title: 'Aucune correspondance fiable',
-      text: 'Nexora ne devine pas : sans nom identique ou identifiant certain, aucune image ni description n’est associée. Choisissez le bon jeu pour corriger.',
+      text: 'Relay ne devine pas : sans nom identique ou identifiant certain, aucune image ni description n’est associée. Choisissez le bon jeu pour corriger.',
     }
   }
   if (match.status === 'matched') {
@@ -109,7 +109,7 @@ export function GamePage({
     let cancelled = false
     setLoadingDetails(true)
     setDetailsError('')
-    window.nexora.metadata.get(game.id)
+    window.relay.metadata.get(game.id)
       .then((loaded) => {
         if (!cancelled) setDetails(loaded)
       })
@@ -128,7 +128,7 @@ export function GamePage({
   useEffect(() => {
     if (!game.installed || !game.installPath) return
     let cancelled = false
-    window.nexora.library.installSize(game.id)
+    window.relay.library.installSize(game.id)
       .then((bytes) => {
         if (!cancelled) setInstallSize({ id: game.id, bytes })
       })
@@ -156,7 +156,7 @@ export function GamePage({
   function chooseMatch(candidate: MatchCandidate): void {
     setPicker(false)
     void runMetadataAction(
-      () => window.nexora.metadata.setMatch(game.id, candidate.source, candidate.id, candidate.name),
+      () => window.relay.metadata.setMatch(game.id, candidate.source, candidate.id, candidate.name),
       `Correspondance : « ${candidate.name} »`,
     )
   }
@@ -174,7 +174,7 @@ export function GamePage({
 
   async function openSteamDb(): Promise<void> {
     try {
-      await window.nexora.library.openSteamDb(game.id)
+      await window.relay.library.openSteamDb(game.id)
     } catch (openError) {
       onError(openError instanceof Error ? openError.message : 'SteamDB n’a pas pu être ouvert.')
     }
@@ -189,7 +189,7 @@ export function GamePage({
     ['État', game.installed ? 'Installé' : 'Non installé'],
     ...(game.installed && game.installPath ? [['Taille sur le disque', sizeLabel] as [string, string]] : []),
     ['Dernier lancement', game.lastPlayedAt ? formatRelative(game.lastPlayedAt) : 'Jamais'],
-    ['Lancements via Nexora', String(game.launchCount)],
+    ['Lancements via Relay', String(game.launchCount)],
     ['Ajouté le', formatDate(game.addedAt)],
   ]
   if (details?.releaseDate) rows.push(['Sortie', details.releaseDate])
@@ -287,9 +287,9 @@ export function GamePage({
               <div className="action-grid">
                 {canCorrectMatch && <button className="btn" disabled={disabled} onClick={() => setPicker(true)}><Search size={15} />Corriger la correspondance</button>}
                 {details?.match.source === 'manual' && (
-                  <button className="btn" disabled={disabled} onClick={() => void runMetadataAction(() => window.nexora.metadata.clearMatch(game.id), 'Détection automatique rétablie')}><RefreshCw size={15} />Détection automatique</button>
+                  <button className="btn" disabled={disabled} onClick={() => void runMetadataAction(() => window.relay.metadata.clearMatch(game.id), 'Détection automatique rétablie')}><RefreshCw size={15} />Détection automatique</button>
                 )}
-                <button className="btn" disabled={disabled} onClick={() => void runMetadataAction(() => window.nexora.metadata.refresh(game.id), 'Informations et images actualisées')}>
+                <button className="btn" disabled={disabled} onClick={() => void runMetadataAction(() => window.relay.metadata.refresh(game.id), 'Informations et images actualisées')}>
                   {working ? <LoaderCircle size={15} className="spin" /> : <RefreshCw size={15} />}Actualiser
                 </button>
                 <button className="btn" disabled={disabled} onClick={() => onChooseArtwork('cover')}><ImagePlus size={15} />Ma jaquette…</button>
@@ -305,7 +305,7 @@ export function GamePage({
             <h3>Gestion</h3>
             {editing && (
               <form className="rename-form" onSubmit={(event) => { event.preventDefault(); void submitRename() }}>
-                <label htmlFor="rename-input">Nom affiché dans Nexora</label>
+                <label htmlFor="rename-input">Nom affiché dans Relay</label>
                 <div className="rename-row">
                   <input id="rename-input" autoFocus value={draft} maxLength={200} onChange={(event) => setDraft(event.target.value)} />
                   <button type="submit" className="btn btn-primary" disabled={saving || !draft.trim()}>{saving ? <LoaderCircle size={15} className="spin" /> : 'OK'}</button>
@@ -319,7 +319,7 @@ export function GamePage({
               <button className="btn" disabled={disabled} onClick={onToggleHidden}>{game.hidden ? <Eye size={15} /> : <EyeOff size={15} />}{game.hidden ? 'Afficher' : 'Masquer'}</button>
               <button className="btn" disabled={disabled || !game.installed || !game.installPath} onClick={onOpenFolder}><FolderOpen size={15} />Ouvrir le dossier</button>
               {game.platform === 'steam' && game.installed && <button className="btn btn-danger" disabled={disabled} onClick={onUninstall}><Trash2 size={15} />Désinstaller</button>}
-              {game.platform === 'local' && <button className="btn btn-danger" disabled={disabled} onClick={onRemove}><Trash2 size={15} />Retirer de Nexora</button>}
+              {game.platform === 'local' && <button className="btn btn-danger" disabled={disabled} onClick={onRemove}><Trash2 size={15} />Retirer de Relay</button>}
             </div>
           </section>
         </aside>

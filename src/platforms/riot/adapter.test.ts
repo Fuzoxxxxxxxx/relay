@@ -74,7 +74,7 @@ describe('Riot installation manifest', () => {
   })
 
   it('reports Riot as absent when no installation manifest exists', async () => {
-    vi.stubEnv('ProgramData', 'Z:\\nexora-missing-riot')
+    vi.stubEnv('ProgramData', 'Z:\\relay-missing-riot')
     vi.stubEnv('LOCALAPPDATA', '')
     await expect(scanRiotGames()).resolves.toEqual({
       detected: false,
@@ -85,7 +85,7 @@ describe('Riot installation manifest', () => {
   })
 
   it('imports only games whose declared executable is present', async () => {
-    temporaryDirectory = await mkdtemp(path.join(os.tmpdir(), 'nexora-riot-install-'))
+    temporaryDirectory = await mkdtemp(path.join(os.tmpdir(), 'relay-riot-install-'))
     const manifestDirectory = path.join(temporaryDirectory, 'Riot Games')
     const gameDirectory = path.join(temporaryDirectory, 'VALORANT', 'live')
     await mkdir(manifestDirectory, { recursive: true })

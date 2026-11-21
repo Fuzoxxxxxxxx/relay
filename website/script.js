@@ -1,5 +1,5 @@
 const owner = 'Fuzoxxxxxxxx'
-const repository = 'nexora'
+const repository = 'relay'
 const releasesUrl = `https://github.com/${owner}/${repository}/releases`
 const apiUrl = `https://api.github.com/repos/${owner}/${repository}/releases/latest`
 
@@ -36,7 +36,7 @@ async function loadLatestRelease() {
 
     const release = await response.json()
     const assets = Array.isArray(release.assets) ? release.assets : []
-    const installer = assets.find((asset) => /^Nexora-Setup-.*\.exe$/i.test(asset.name))
+    const installer = assets.find((asset) => /^Relay-Setup-.*\.exe$/i.test(asset.name))
       ?? assets.find((asset) => /\.exe$/i.test(asset.name))
     if (!installer?.browser_download_url) {
       status.textContent = `La version ${release.tag_name} est publiée, mais son installateur Windows n’est pas encore disponible.`
@@ -49,7 +49,7 @@ async function loadLatestRelease() {
       : 'dernière version'
     setDownload(installer.browser_download_url, 'Télécharger pour Windows', `Version ${release.tag_name} · publiée le ${date}`)
   } catch (error) {
-    console.error('Impossible de récupérer la dernière release Nexora :', error)
+    console.error('Impossible de récupérer la dernière release Relay :', error)
     status.textContent = 'Impossible de vérifier le téléchargement pour le moment. Consultez les releases GitHub.'
   }
 }

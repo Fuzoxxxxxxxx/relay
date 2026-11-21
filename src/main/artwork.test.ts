@@ -25,7 +25,7 @@ function createService(epicNamespace?: (appId: string) => Promise<string | null>
 }
 
 beforeEach(async () => {
-  directory = await mkdtemp(path.join(tmpdir(), 'nexora-artwork-'))
+  directory = await mkdtemp(path.join(tmpdir(), 'relay-artwork-'))
   clearSteamStoreCache()
 })
 

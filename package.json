@@ -1,5 +1,5 @@
 {
-  "name": "nexora",
+  "name": "relay",
   "private": true,
   "version": "0.1.0",
   "description": "Launcher desktop de bibliothèque de jeux multi-plateforme",
@@ -41,8 +41,8 @@
     "wait-on": "^9.5.1"
   },
   "build": {
-    "appId": "com.nexora.launcher",
-    "productName": "Nexora",
+    "appId": "com.relay.launcher",
+    "productName": "Relay",
     "directories": {
       "output": "release"
     },
@@ -72,16 +72,16 @@
       "allowToChangeInstallationDirectory": false,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "Nexora",
+      "shortcutName": "Relay",
       "runAfterFinish": true,
       "deleteAppDataOnUninstall": false,
-      "artifactName": "Nexora-Setup-${version}.${ext}"
+      "artifactName": "Relay-Setup-${version}.${ext}"
     },
     "publish": [
       {
         "provider": "github",
         "owner": "Fuzoxxxxxxxx",
-        "repo": "nexora",
+        "repo": "relay",
         "releaseType": "release"
       }
     ]

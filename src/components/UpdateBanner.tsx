@@ -20,7 +20,7 @@ export function UpdateBanner({ onError }: UpdateBannerProps) {
       <div className="update-banner" role="status">
         <div className="update-row">
           <LoaderCircle size={15} className="spin" />
-          <span>Téléchargement de Nexora {state.version ?? ''}…</span>
+          <span>Téléchargement de Relay {state.version ?? ''}…</span>
           <strong>{state.percent} %</strong>
         </div>
         <div className="update-progress"><span style={{ width: `${state.percent}%` }} /></div>
@@ -32,7 +32,7 @@ export function UpdateBanner({ onError }: UpdateBannerProps) {
     const install = async (): Promise<void> => {
       setInstalling(true)
       try {
-        await window.nexora.update.install()
+        await window.relay.update.install()
       } catch (error) {
         setInstalling(false)
         onError(error instanceof Error ? error.message : 'La mise à jour n’a pas pu être installée.')
@@ -42,7 +42,7 @@ export function UpdateBanner({ onError }: UpdateBannerProps) {
       <div className="update-banner update-ready" role="status">
         <div className="update-row">
           <Download size={16} />
-          <span>Nexora {state.version} est prête. Elle s’installera aussi à la fermeture de l’application.</span>
+          <span>Relay {state.version} est prête. Elle s’installera aussi à la fermeture de l’application.</span>
           <button className="btn btn-primary" disabled={installing} onClick={() => void install()}>
             {installing ? <LoaderCircle size={15} className="spin" /> : null}Redémarrer et installer
           </button>

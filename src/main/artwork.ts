@@ -91,7 +91,7 @@ export class GameArtworkService {
     return path.join(await this.cacheDirectory(), `${platform}-${appId}-${this.fileKind(kind)}-${fileRevision}.jpg`)
   }
 
-  /** Supprime une seule fois les images des anciennes versions de Nexora. */
+  /** Supprime une seule fois les images des anciennes versions de Relay. */
   private purgeLegacyFiles(): Promise<void> {
     this.legacyPurge ??= (async () => {
       try {

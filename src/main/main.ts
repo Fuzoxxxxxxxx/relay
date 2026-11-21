@@ -57,6 +57,9 @@ import { SteamGridDbClient } from '../platforms/steamgriddb/adapter'
 import { EgDataClient } from '../platforms/egdata/adapter'
 import type { ArtworkKind, ArtworkPlatform, CustomArtworkKind, LocalImportResult, PlatformId } from '../shared/types'
 
+// Keep existing local libraries and settings after the product rename.
+app.setPath('userData', path.join(app.getPath('appData'), 'nexora'))
+
 const igdbClient = new IgdbClient(readIgdbCredentials)
 const steamGridDbClient = new SteamGridDbClient(readSteamGridDbKey)
 const translator = new FrenchTranslator(readDeepLKey, getCacheDirectory)
@@ -298,7 +301,7 @@ async function registerIpcHandlers(): Promise<void> {
     trustedSender(event)
     let selectedExecutables: string[]
     if (executablePaths === undefined) {
-      if (!mainWindow) throw new Error('La fenêtre Nexora n’est pas disponible.')
+      if (!mainWindow) throw new Error('La fenêtre Relay n’est pas disponible.')
       const executableDialog = await dialog.showOpenDialog(mainWindow, {
         title: 'Choisir les programmes .exe des jeux',
         properties: ['openFile', 'multiSelections'],
@@ -430,7 +433,7 @@ async function registerIpcHandlers(): Promise<void> {
       throw new Error('La désinstallation n’est proposée que pour les jeux Steam installés.')
     }
     if (!await findSteamRoot()) throw new Error('Steam n’est pas détecté.')
-    // Steam affiche lui-même sa confirmation : Nexora ne supprime aucun fichier.
+    // Steam affiche lui-même sa confirmation : Relay ne supprime aucun fichier.
     await shell.openExternal(`steam://uninstall/${game.externalId}`)
   })
   ipcMain.handle('library:open-steamdb', async (event, gameId: unknown) => {
@@ -485,7 +488,7 @@ async function registerIpcHandlers(): Promise<void> {
     trustedSender(event)
     if (!isArtworkPlatform(platform)) throw new Error('Plateforme d’illustration invalide.')
     if (kind !== 'cover' && kind !== 'hero') throw new Error('Type d’illustration invalide.')
-    if (!mainWindow) throw new Error('La fenêtre Nexora n’est pas disponible.')
+    if (!mainWindow) throw new Error('La fenêtre Relay n’est pas disponible.')
     const selection = await dialog.showOpenDialog(mainWindow, {
       title: kind === 'cover' ? 'Choisir une jaquette' : 'Choisir une bannière',
       properties: ['openFile'],
@@ -540,7 +543,7 @@ async function registerIpcHandlers(): Promise<void> {
   })
   ipcMain.handle('settings:choose-cache-directory', async (event) => {
     trustedSender(event)
-    if (!mainWindow) throw new Error('La fenêtre Nexora n’est pas disponible.')
+    if (!mainWindow) throw new Error('La fenêtre Relay n’est pas disponible.')
     const result = await dialog.showOpenDialog(mainWindow, {
       title: 'Choisir le dossier de cache des illustrations',
       properties: ['openDirectory', 'createDirectory'],
@@ -689,7 +692,7 @@ function createWindow(): void {
     })
   } else {
     void mainWindow.loadFile(path.join(__dirname, '..', '..', 'dist', 'index.html')).catch((error: unknown) => {
-      console.error('Impossible de charger l’interface Nexora :', error)
+      console.error('Impossible de charger l’interface Relay :', error)
     })
   }
 }
@@ -721,7 +724,7 @@ void (async () => {
       if (BrowserWindow.getAllWindows().length === 0) createWindow()
     })
   } catch (error) {
-    console.error('Nexora — erreur de démarrage :', error)
+    console.error('Relay — erreur de démarrage :', error)
     app.quit()
   }
 })()

@@ -29,7 +29,7 @@ export function MatchPicker({ gameId, initialQuery, onSelect, onClose }: MatchPi
     let cancelled = false
     setState('loading')
     const timeout = window.setTimeout(() => {
-      window.nexora.metadata.searchMatches(gameId, term)
+      window.relay.metadata.searchMatches(gameId, term)
         .then((candidates) => {
           if (cancelled) return
           setResults(candidates)
