@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#07080c" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="description" content="Téléchargez Relay pour Windows 10 et 11 : installateur, version portable, installation et configuration requise." />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./pages.css" />
+    <title>Télécharger Relay pour Windows</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="./index.html" aria-label="Relay, accueil">
+          <img class="brand-mark" src="./assets/relay-mark.svg" alt="" width="34" height="34" />
+          <span class="brand-name">Relay</span>
+        </a>
+        <nav class="main-nav" aria-label="Navigation principale">
+          <a href="./index.html#fonctionnalites">Fonctionnalités</a>
+          <a href="./telechargement.html" aria-current="page">Téléchargement</a>
+          <a href="./documentation.html">Documentation</a>
+          <a href="./changelog.html">Changelog</a>
+          <a href="./support.html">Support</a>
+        </nav>
+        <a class="button button-primary button-small" href="#telecharger">Télécharger</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="page-hero">
+        <div class="wrap">
+          <span class="eyebrow">Téléchargement</span>
+          <h1>Relay pour <span class="grad">Windows.</span></h1>
+          <p class="lead">Installez Relay en quelques clics et retrouvez tous vos jeux Steam, Epic Games, Riot et locaux au même endroit.</p>
+        </div>
+      </section>
+
+      <section class="wrap" id="telecharger">
+        <div class="dl-main">
+          <img class="brand-mark" src="./assets/relay-mark.svg" alt="" width="64" height="64" />
+          <h2>Dernière version</h2>
+          <a class="button button-primary is-disabled" id="download-link" href="https://github.com/Fuzoxxxxxxxx/relay/releases" aria-disabled="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="m7 10 5 5 5-5" /><path d="M12 15V3" /></svg>
+            <span id="download-label">Bientôt disponible</span>
+          </a>
+          <p class="download-status" id="download-status" aria-live="polite">Recherche de la dernière version…</p>
+          <div class="chips">
+            <span class="chip-pill">Windows 10 et 11</span>
+            <span class="chip-pill">Installation standard</span>
+            <span class="chip-pill">Mises à jour automatiques</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="page-section wrap" id="versions">
+        <h2>Tous les fichiers</h2>
+        <p class="block-lead">Les fichiers de la dernière version publiée. Téléchargez-les uniquement depuis cette page ou depuis les releases officielles du dépôt.</p>
+        <div class="asset-list" id="asset-list">
+          <div class="asset-empty">Chargement…</div>
+        </div>
+        <p class="platform-note" style="text-align:left;margin-top:18px">
+          Anciennes versions et notes détaillées : <a href="./changelog.html" style="color:var(--accent-2)">changelog</a> ·
+          <a href="https://github.com/Fuzoxxxxxxxx/relay/releases" target="_blank" rel="noreferrer" style="color:var(--accent-2)">releases GitHub ↗</a>
+        </p>
+      </section>
+
+      <section class="page-section wrap">
+        <h2>Installer Relay</h2>
+        <p class="block-lead">Trois étapes, et votre bibliothèque est prête.</p>
+        <div class="steps">
+          <article class="step">
+            <h3>Téléchargez l’installateur</h3>
+            <p>Choisissez l’installateur Windows ci-dessus. C’est la version recommandée : elle reçoit les mises à jour automatiquement.</p>
+          </article>
+          <article class="step">
+            <h3>Lancez-le</h3>
+            <p>Relay n’étant pas encore signé, Windows peut afficher un avertissement SmartScreen. Cliquez sur « Informations complémentaires », puis « Exécuter quand même ». L’installation se fait en un clic, sans droits administrateur, et crée un raccourci sur le bureau et dans le menu Démarrer.</p>
+          </article>
+          <article class="step">
+            <h3>Synchronisez</h3>
+            <p>Au premier lancement, cliquez sur « Synchroniser » : Relay détecte vos jeux installés et récupère leurs images.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="page-section wrap">
+        <h2>Installateur ou version portable ?</h2>
+        <div class="table-wrap prose" style="margin-top:22px">
+          <table>
+            <thead><tr><th></th><th>Installateur</th><th>Portable (si publiée)</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Installation</strong></td><td>Installation en un clic</td><td>Aucune, lancez le fichier</td></tr>
+              <tr><td><strong>Mises à jour</strong></td><td>Automatiques</td><td>Manuelles : téléchargez la nouvelle version</td></tr>
+              <tr><td><strong>Recommandé pour</strong></td><td>La plupart des utilisateurs</td><td>Clé USB, essai rapide</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="page-section wrap">
+        <h2>Configuration requise</h2>
+        <div class="req-grid" style="margin-top:22px">
+          <article class="req-card">
+            <h3>Système</h3>
+            <p>Windows 10 ou Windows 11, en 64 bits (x64).</p>
+          </article>
+          <article class="req-card">
+            <h3>Vos launchers</h3>
+            <p>Steam, Epic Games Launcher et le client Riot installés pour que leurs jeux soient détectés. Aucun n’est obligatoire.</p>
+          </article>
+          <article class="req-card">
+            <h3>Connexion</h3>
+            <p>Utile pour récupérer images, descriptions et mises à jour. La bibliothèque elle-même reste stockée sur votre PC.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="page-section wrap">
+        <div class="cta-band">
+          <div>
+            <h3>Besoin d’aide pour démarrer ?</h3>
+            <p>La documentation explique chaque étape, et le support répond aux problèmes courants.</p>
+          </div>
+          <div class="actions">
+            <a class="button" href="./documentation.html">Documentation</a>
+            <a class="button" href="./support.html">Support</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap footer-content">
+        <a class="brand" href="./index.html" aria-label="Relay, accueil">
+          <img class="brand-mark" src="./assets/relay-mark.svg" alt="" width="32" height="32" />
+          <span class="brand-name">Relay</span>
+        </a>
+        <span class="footer-copy">Vos jeux, enfin réunis.</span>
+        <div class="footer-links">
+          <a href="./telechargement.html">Téléchargement</a>
+          <a href="./documentation.html">Documentation</a>
+          <a href="./changelog.html">Changelog</a>
+          <a href="./support.html">Support</a>
+          <a href="./confidentialite.html">Confidentialité</a>
+          <a href="https://github.com/Fuzoxxxxxxxx/relay" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
+      </div>
+    </footer>
+    <script src="./pages.js" defer></script>
+  </body>
+</html>
