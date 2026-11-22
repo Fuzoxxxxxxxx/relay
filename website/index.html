@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f3eee3" />
+    <meta name="theme-color" content="#07080c" />
+    <meta name="color-scheme" content="dark" />
     <meta
       name="description"
       content="Relay réunit vos jeux Steam, Epic Games, Riot Games et locaux dans une bibliothèque gaming claire et personnalisable pour Windows."
@@ -15,12 +16,6 @@
       content="Une bibliothèque PC pour retrouver et lancer vos jeux, quel que soit leur launcher."
     />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap"
-    />
     <link rel="stylesheet" href="./styles.css" />
     <title>Relay — Tous vos jeux, réunis</title>
   </head>
@@ -28,207 +23,321 @@
     <header class="site-header">
       <div class="header-inner">
         <a class="brand" href="#accueil" aria-label="Relay, accueil">
-          <img class="brand-mark" src="./assets/relay-mark.svg" alt="" width="40" height="40" />
+          <img class="brand-mark" src="./assets/relay-mark.svg" alt="" width="34" height="34" />
           <span class="brand-name">Relay</span>
         </a>
         <nav class="main-nav" aria-label="Navigation principale">
+          <a href="#interface">Interface</a>
           <a href="#plateformes">Plateformes</a>
           <a href="#fonctionnalites">Fonctionnalités</a>
           <a href="#faq">FAQ</a>
         </nav>
-        <a class="button button-primary button-small" href="#telechargement">Télécharger&nbsp;↓</a>
+        <a class="button button-primary button-small" href="#telechargement">Télécharger</a>
       </div>
     </header>
 
     <main>
-      <section class="hero section-wrap" id="accueil">
-        <div class="hero-copy">
-          <span class="sticker sticker-mint">● Windows 10 &amp; 11</span>
-          <h1>
-            Vos jeux<br />
-            réunis.<br />
-            <span class="highlight">Prêts à jouer.</span>
-          </h1>
-          <p class="hero-description">
-            Retrouvez vos bibliothèques Steam, Epic Games, Riot et vos jeux locaux
-            dans une interface pensée pour jouer, pas pour chercher.
-          </p>
-          <div class="hero-actions" id="telechargement">
-            <a class="button button-primary is-disabled" id="download-link" href="https://github.com/Fuzoxxxxxxxx/relay/releases" aria-disabled="true">
-              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2.5v10m0 0 4-4m-4 4-4-4M3 14v2.5h14V14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-              <span id="download-label">Bientôt disponible</span>
-            </a>
-            <a class="button" href="https://github.com/Fuzoxxxxxxxx/relay/releases" target="_blank" rel="noreferrer">
-              Voir les versions <span aria-hidden="true">↗</span>
-            </a>
+      <!-- Hero : mur de jaquettes + capture de l'application -->
+      <section class="landing-hero" id="accueil">
+        <div class="hero-top">
+          <div class="cover-wall" id="wall" aria-hidden="true"></div>
+          <div class="wrap">
+            <span class="status-chip"><i></i>Pour Windows 10 &amp; 11</span>
+            <h1>Tous vos jeux.<br />Un seul <span class="grad">launcher.</span></h1>
+            <p class="hero-description">
+              Relay réunit vos bibliothèques Steam, Epic Games, Riot et vos jeux locaux dans une interface
+              pensée pour jouer, pas pour chercher.
+            </p>
+            <div class="hero-actions" id="telechargement">
+              <a class="button button-primary is-disabled" id="download-link" href="https://github.com/Fuzoxxxxxxxx/relay/releases" aria-disabled="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="m7 10 5 5 5-5" /><path d="M12 15V3" /></svg>
+                <span id="download-label">Bientôt disponible</span>
+              </a>
+              <a class="button" href="https://github.com/Fuzoxxxxxxxx/relay/releases" target="_blank" rel="noreferrer">
+                Voir les versions <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+            <p class="download-status" id="download-status" aria-live="polite">
+              La première version sera disponible ici dès sa publication.
+            </p>
+            <ul class="hero-facts">
+              <li>Windows 10 et 11</li>
+              <li>Bibliothèque stockée localement</li>
+              <li>Mises à jour automatiques</li>
+            </ul>
           </div>
-          <p class="download-status" id="download-status" aria-live="polite">
-            La première version sera disponible ici dès sa publication.
-          </p>
-          <ul class="hero-facts">
-            <li>Windows 10 et 11</li>
-            <li>Bibliothèque stockée localement</li>
-          </ul>
         </div>
 
-        <div class="hero-visual" aria-label="Aperçu de la bibliothèque Relay">
-          <div class="app-window">
-            <div class="window-top">
-              <div class="window-controls" aria-hidden="true"><i></i><i></i><i></i></div>
-              <div class="window-search">
-                <span>Rechercher un jeu...</span>
-                <kbd>Ctrl K</kbd>
-              </div>
-            </div>
-            <div class="library-preview">
-              <div class="preview-heading">
-                <div>
-                  <span class="preview-kicker">VOTRE ESPACE DE JEU</span>
-                  <h2>La bibliothèque.</h2>
-                </div>
-                <span class="sync-pill">↻ Synchroniser</span>
-              </div>
-              <div class="preview-filters" aria-hidden="true">
-                <span class="filter-active">Tout</span>
-                <span>Installés</span>
-                <span>Favoris</span>
-              </div>
-              <div class="game-grid" aria-hidden="true">
-                <article class="game-card">
-                  <div class="game-source"><img src="./assets/platforms/steam.svg" alt="" /></div>
-                  <div class="game-art art-one"><span class="art-sun"></span><span class="art-mountain"></span></div>
-                  <div class="game-info"><span>AVENTURE</span><strong>En terrain connu</strong></div>
-                </article>
-                <article class="game-card">
-                  <div class="game-source"><img src="./assets/platforms/epicgames.svg" alt="" /></div>
-                  <div class="game-art art-two"><span class="art-moon"></span><span class="art-ridge"></span></div>
-                  <div class="game-info"><span>EXPLORATION</span><strong>À votre rythme</strong></div>
-                </article>
-                <article class="game-card">
-                  <div class="game-source"><img src="./assets/platforms/riotgames.svg" alt="" /></div>
-                  <div class="game-art art-three"><span class="art-core"></span><span class="art-ring"></span></div>
-                  <div class="game-info"><span>COMPÉTITIF</span><strong>La prochaine partie</strong></div>
-                </article>
-              </div>
-              <p class="preview-bottom"><i></i> Vos jeux restent sur votre PC</p>
-            </div>
-          </div>
-          <div class="sticker sticker-float" aria-hidden="true">
-            <span class="float-logos">
-              <img src="./assets/platforms/steam.svg" alt="" />
-              <img src="./assets/platforms/epicgames.svg" alt="" />
-              <img src="./assets/platforms/riotgames.svg" alt="" />
-            </span>
-            Un seul point de départ
+        <div class="wrap preview" id="apercu">
+          <figure class="shot shot-hero" data-shot="home" data-label="Accueil de Relay : jeu à la une et derniers lancements" style="--h: 640px">
+            <img class="shot-real" src="./assets/screenshots/home.png" alt="Accueil de Relay : jeu à la une et derniers lancements" onerror="this.remove()" />
+          </figure>
+          <div class="logo-strip" aria-label="Plateformes prises en charge">
+            <span class="logo-strip-label">Compatible avec</span>
+            <span><img src="./assets/platforms/steam.svg" alt="" />Steam</span>
+            <span><img src="./assets/platforms/epicgames.svg" alt="" />Epic Games</span>
+            <span><img src="./assets/platforms/riotgames.svg" alt="" />Riot Games</span>
+            <span><img src="./assets/platforms/local.svg" alt="" />Jeux locaux</span>
           </div>
         </div>
       </section>
 
-      <section class="platform-band" id="plateformes" aria-label="Plateformes prises en charge">
-        <div class="marquee" aria-hidden="true">
-          <div class="marquee-track">
-            <div class="marquee-group">
-              <span class="marquee-item"><b><img src="./assets/platforms/steam.svg" alt="" /></b>Steam</span>
-              <span class="marquee-item"><b><img src="./assets/platforms/epicgames.svg" alt="" /></b>Epic Games</span>
-              <span class="marquee-item"><b><img src="./assets/platforms/riotgames.svg" alt="" /></b>Riot Games</span>
-              <span class="marquee-item"><b><img src="./assets/platforms/local.svg" alt="" /></b>Jeux locaux</span>
-            </div>
-            <div class="marquee-group">
-              <span class="marquee-item"><b><img src="./assets/platforms/steam.svg" alt="" /></b>Steam</span>
-              <span class="marquee-item"><b><img src="./assets/platforms/epicgames.svg" alt="" /></b>Epic Games</span>
-              <span class="marquee-item"><b><img src="./assets/platforms/riotgames.svg" alt="" /></b>Riot Games</span>
-              <span class="marquee-item"><b><img src="./assets/platforms/local.svg" alt="" /></b>Jeux locaux</span>
-            </div>
-            <div class="marquee-group">
-              <span class="marquee-item"><b><img src="./assets/platforms/steam.svg" alt="" /></b>Steam</span>
-              <span class="marquee-item"><b><img src="./assets/platforms/epicgames.svg" alt="" /></b>Epic Games</span>
-              <span class="marquee-item"><b><img src="./assets/platforms/riotgames.svg" alt="" /></b>Riot Games</span>
-              <span class="marquee-item"><b><img src="./assets/platforms/local.svg" alt="" /></b>Jeux locaux</span>
-            </div>
-            <div class="marquee-group">
-              <span class="marquee-item"><b><img src="./assets/platforms/steam.svg" alt="" /></b>Steam</span>
-              <span class="marquee-item"><b><img src="./assets/platforms/epicgames.svg" alt="" /></b>Epic Games</span>
-              <span class="marquee-item"><b><img src="./assets/platforms/riotgames.svg" alt="" /></b>Riot Games</span>
-              <span class="marquee-item"><b><img src="./assets/platforms/local.svg" alt="" /></b>Jeux locaux</span>
-            </div>
-          </div>
+      <!-- Ruban de jeux -->
+      <div class="strip" aria-hidden="true">
+        <div class="strip-row" data-strip="0"></div>
+        <div class="strip-row reverse" data-strip="1"></div>
+      </div>
+
+      <!-- Interface -->
+      <section class="section wrap" id="interface">
+        <div class="section-heading" data-reveal>
+          <span class="eyebrow">L’interface</span>
+          <h2>Pensée pour <span class="grad">jouer.</span></h2>
+          <p>Des jaquettes en grand, des filtres clairs et une fiche complète pour chaque jeu.</p>
         </div>
-        <p class="section-wrap platform-note">
-          Relay rassemble les jeux déjà installés. Il n’est pas affilié aux éditeurs de ces plateformes :
-          la détection dépend de leur installation sur votre PC.
+
+        <div class="showcase" data-reveal>
+          <div class="showcase-copy">
+            <span class="showcase-num">01 · Bibliothèque</span>
+            <h3>Toute votre bibliothèque, d’un coup d’œil</h3>
+            <p>Filtrez par état ou par plateforme, triez comme vous voulez et retrouvez n’importe quel jeu avec la recherche.</p>
+            <ul class="showcase-points">
+              <li>Filtres installés, favoris, récents</li>
+              <li>Tri par dernier lancement ou par nom</li>
+              <li>Taille des jaquettes réglable</li>
+            </ul>
+          </div>
+          <figure class="shot" data-shot="library" data-label="Bibliothèque de Relay avec filtres par état et par plateforme" style="--h: 640px">
+            <img class="shot-real" src="./assets/screenshots/library.png" alt="Bibliothèque de Relay avec filtres par état et par plateforme" loading="lazy" onerror="this.remove()" />
+          </figure>
+        </div>
+
+        <div class="showcase" data-reveal>
+          <div class="showcase-copy">
+            <span class="showcase-num">02 · Fiche du jeu</span>
+            <h3>Une fiche pour chaque jeu</h3>
+            <p>Description en français, galerie, informations et correspondance des images, avec un bouton Jouer toujours à portée de clic.</p>
+            <ul class="showcase-points">
+              <li>Lancement en un clic</li>
+              <li>Correspondance vérifiable et corrigeable</li>
+              <li>Vos propres jaquettes et bannières</li>
+            </ul>
+          </div>
+          <figure class="shot" data-shot="game" data-label="Fiche d’un jeu dans Relay : description, galerie et informations" style="--h: 700px">
+            <img class="shot-real" src="./assets/screenshots/game.png" alt="Fiche d’un jeu dans Relay : description, galerie et informations" loading="lazy" onerror="this.remove()" />
+          </figure>
+        </div>
+      </section>
+
+      <!-- Plateformes -->
+      <section class="section wrap" id="plateformes" data-reveal>
+        <div class="section-heading">
+          <span class="eyebrow">Plateformes</span>
+          <h2>Vos launchers, <span class="grad">sous le même toit.</span></h2>
+          <p>Relay détecte ce qui est déjà installé sur votre PC et le rassemble dans une seule bibliothèque.</p>
+        </div>
+        <div class="platform-grid">
+          <article class="platform-tile">
+            <div class="platform-logo"><img src="./assets/platforms/steam.svg" alt="" /></div>
+            <h3>Steam</h3>
+            <p>Jeux installés détectés automatiquement. Import facultatif de vos jeux possédés avec votre propre clé API.</p>
+            <div class="tile-posters poster-row" data-covers="cs2,elden,cyberpunk" aria-hidden="true"></div>
+          </article>
+          <article class="platform-tile">
+            <div class="platform-logo"><img src="./assets/platforms/epicgames.svg" alt="" /></div>
+            <h3>Epic Games</h3>
+            <p>Jeux installés reconnus grâce aux manifestes du launcher, lancés via le protocole officiel.</p>
+            <div class="tile-posters poster-row" data-covers="fortnite,hades,rocketleague" aria-hidden="true"></div>
+          </article>
+          <article class="platform-tile">
+            <div class="platform-logo"><img src="./assets/platforms/riotgames.svg" alt="" /></div>
+            <h3>Riot Games</h3>
+            <p>League of Legends, VALORANT et 2XKO retrouvés et lancés depuis Relay.</p>
+            <div class="tile-posters poster-row" data-covers="valorant,lol,2xko" aria-hidden="true"></div>
+          </article>
+          <article class="platform-tile">
+            <div class="platform-logo"><img src="./assets/platforms/local.svg" alt="" /></div>
+            <h3>Jeux locaux</h3>
+            <p>Glissez le <code>.exe</code> d’un jeu dans la fenêtre : Relay retrouve son nom et ses visuels.</p>
+            <div class="tile-posters poster-row" data-covers="hollow" aria-hidden="true"></div>
+          </article>
+        </div>
+        <p class="platform-note">
+          Relay n’est pas affilié aux éditeurs de ces plateformes. La détection dépend de leur installation sur votre PC.
+          Les visuels de jeux appartiennent à leurs ayants droit.
         </p>
       </section>
 
-      <section class="features section-wrap" id="fonctionnalites">
+      <!-- Avant / après -->
+      <section class="section wrap" data-reveal>
         <div class="section-heading">
-          <span class="section-label">MOINS DE CLICS. PLUS DE JEU.</span>
-          <h2>Tout commence <span class="highlight">au même endroit.</span></h2>
-          <p>Une bibliothèque claire pour retrouver, organiser et lancer les jeux que vous avez déjà.</p>
+          <span class="eyebrow">Le changement</span>
+          <h2>Fini de <span class="grad">jongler.</span></h2>
         </div>
-        <div class="feature-grid">
-          <article class="feature-card card-yellow">
-            <div class="feature-index">01</div>
-            <div class="feature-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="7" height="7" rx="1.4" stroke="currentColor" stroke-width="2" /><rect x="13" y="4" width="7" height="7" rx="1.4" stroke="currentColor" stroke-width="2" /><rect x="4" y="13" width="7" height="7" rx="1.4" stroke="currentColor" stroke-width="2" /><rect x="13" y="13" width="7" height="7" rx="1.4" stroke="currentColor" stroke-width="2" /></svg>
-            </div>
-            <h3>Une bibliothèque, pas quatre</h3>
-            <p>Jeux installés, favoris et titres récemment lancés réunis dans une seule vue.</p>
+        <div class="compare">
+          <article class="compare-card">
+            <h3>Sans Relay</h3>
+            <ul>
+              <li><span class="no">✕</span>Ouvrir Steam, puis Epic, puis le client Riot</li>
+              <li><span class="no">✕</span>Chercher où se trouve l’exécutable d’un jeu</li>
+              <li><span class="no">✕</span>Se souvenir de ce qu’on jouait la dernière fois</li>
+            </ul>
           </article>
-          <article class="feature-card card-coral">
-            <div class="feature-index">02</div>
-            <div class="feature-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none"><path d="m9 5 10 7-10 7V5Z" stroke="currentColor" stroke-width="2.1" stroke-linejoin="round" /><path d="M4 5v14" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" /></svg>
-            </div>
-            <h3>Reprenez en un clic</h3>
-            <p>Lancez un jeu depuis sa fiche, avec son launcher officiel quand il le faut.</p>
-          </article>
-          <article class="feature-card card-mint">
-            <div class="feature-index">03</div>
-            <div class="feature-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none"><path d="M12 3.5 14.6 9l5.9.9-4.3 4.2 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.2 5.9-.9L12 3.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" /></svg>
-            </div>
-            <h3>À votre image</h3>
-            <p>Personnalisez les illustrations, mettez vos favoris en avant et masquez le reste.</p>
+          <article class="compare-card after">
+            <h3>Avec Relay</h3>
+            <ul>
+              <li><span class="yes">✓</span>Une seule fenêtre pour tous vos jeux</li>
+              <li><span class="yes">✓</span>Recherche instantanée avec <kbd>Ctrl</kbd> <kbd>K</kbd></li>
+              <li><span class="yes">✓</span>Reprise des derniers lancements dès l’accueil</li>
+            </ul>
           </article>
         </div>
       </section>
 
-      <section class="privacy-band">
-        <div class="section-wrap privacy-content">
+      <!-- Fonctionnalités -->
+      <section class="section wrap" id="fonctionnalites">
+        <div class="section-heading" data-reveal>
+          <span class="eyebrow">Moins de clics. Plus de jeu.</span>
+          <h2>Tout commence <span class="grad">au même endroit.</span></h2>
+          <p>Une bibliothèque claire pour retrouver, organiser et lancer les jeux que vous avez déjà.</p>
+        </div>
+        <div class="bento">
+          <article class="bento-card span-7" data-reveal>
+            <div class="copy">
+              <div class="bento-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></svg>
+              </div>
+              <h3>Une bibliothèque, pas quatre</h3>
+              <p>Jeux installés, favoris et titres récemment lancés réunis dans une seule vue, avec des filtres par état et par plateforme.</p>
+              <div class="mini">
+                <span class="mini-chip on">Tous les jeux</span>
+                <span class="mini-chip"><img src="./assets/platforms/steam.svg" alt="" />Steam</span>
+                <span class="mini-chip"><img src="./assets/platforms/epicgames.svg" alt="" />Epic</span>
+                <span class="mini-chip"><img src="./assets/platforms/riotgames.svg" alt="" />Riot</span>
+              </div>
+            </div>
+            <div class="collage poster-row" data-covers="elden,bg3,cyberpunk" aria-hidden="true"></div>
+          </article>
+
+          <article class="bento-card span-5" data-reveal>
+            <div class="bento-icon cyan">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3" /></svg>
+            </div>
+            <h3>Reprenez en un clic</h3>
+            <p>Lancez un jeu depuis sa carte ou sa fiche, avec le launcher officiel quand il le faut. Vos derniers lancements s’affichent dès l’accueil.</p>
+          </article>
+
+          <article class="bento-card" data-reveal>
+            <div class="bento-icon green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /><path d="m9 12 2 2 4-4" /></svg>
+            </div>
+            <h3>Des images fiables</h3>
+            <p>Chaque jeu est identifié, jamais deviné. Visuels officiels, egdata, SteamGridDB puis IGDB, et correction manuelle en un clic.</p>
+          </article>
+
+          <article class="bento-card" data-reveal>
+            <div class="bento-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M7 3v18" /><path d="M3 7.5h4" /><path d="M3 12h18" /><path d="M3 16.5h4" /><path d="M17 3v18" /><path d="M17 7.5h4" /><path d="M17 16.5h4" /></svg>
+            </div>
+            <h3>Des fiches complètes</h3>
+            <p>Description en français, galerie de captures et bandes-annonces, informations et dossier d’installation.</p>
+            <div class="mini-thumbs" data-covers="cyberpunk,elden,bg3" data-kind="wide" aria-hidden="true"></div>
+          </article>
+
+          <article class="bento-card" data-reveal>
+            <div class="bento-icon cyan">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="21" x2="14" y1="4" y2="4" /><line x1="10" x2="3" y1="4" y2="4" /><line x1="21" x2="12" y1="12" y2="12" /><line x1="8" x2="3" y1="12" y2="12" /><line x1="21" x2="16" y1="20" y2="20" /><line x1="12" x2="3" y1="20" y2="20" /><line x1="14" x2="14" y1="2" y2="6" /><line x1="8" x2="8" y1="10" y2="14" /><line x1="16" x2="16" y1="18" y2="22" /></svg>
+            </div>
+            <h3>À votre image</h3>
+            <p>Densité réglable, animations réduites en option, vos propres jaquettes et bannières, favoris et jeux masqués.</p>
+          </article>
+
+          <article class="bento-card span-6" data-reveal>
+            <div class="bento-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+            </div>
+            <h3>Privé par conception</h3>
+            <p>Bibliothèque et préférences restent sur votre ordinateur. Les identifiants facultatifs sont chiffrés avec le stockage sécurisé de Windows.</p>
+          </article>
+
+          <article class="bento-card span-6" data-reveal>
+            <div class="bento-icon green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /><path d="M8 16H3v5" /></svg>
+            </div>
+            <h3>Toujours à jour</h3>
+            <p>Les nouvelles versions sont publiées sur GitHub et l’installateur Windows peut les récupérer automatiquement.</p>
+            <div class="mini-bar" aria-hidden="true"><span></span></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Étapes -->
+      <section class="section wrap" data-reveal>
+        <div class="section-heading">
+          <span class="eyebrow">Prêt en trois minutes</span>
+          <h2>Installez. Synchronisez. <span class="grad">Jouez.</span></h2>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <h3>Installez Relay</h3>
+            <p>Téléchargez l’installateur Windows depuis les releases officielles du projet.</p>
+          </article>
+          <article class="step">
+            <h3>Synchronisez</h3>
+            <p>Relay détecte Steam, Epic Games et Riot. Pour les autres jeux, glissez simplement leur <code>.exe</code>.</p>
+          </article>
+          <article class="step">
+            <h3>Lancez la partie</h3>
+            <p>Choisissez un jeu, cliquez sur lecture : Relay transmet le lancement au bon launcher.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Confidentialité -->
+      <section class="privacy" data-reveal>
+        <div class="wrap privacy-content">
           <img class="privacy-mark" src="./assets/relay-mark.svg" alt="" width="64" height="64" />
-          <div class="privacy-copy">
-            <span class="section-label">VOTRE PC. VOS DONNÉES.</span>
+          <div>
+            <span class="eyebrow">Votre PC. Vos données.</span>
             <h2>Votre bibliothèque reste chez vous.</h2>
-            <p>Jeux et préférences sont gérés localement. Les identifiants facultatifs sont chiffrés sur votre ordinateur.</p>
+            <p>Jeux et préférences sont gérés localement. Fenêtre isolée, API restreinte et identifiants chiffrés : Relay ne transmet rien à un compte en ligne.</p>
           </div>
-          <a class="button button-primary" href="https://github.com/Fuzoxxxxxxxx/relay" target="_blank" rel="noreferrer">
+          <a class="button" href="https://github.com/Fuzoxxxxxxxx/relay" target="_blank" rel="noreferrer">
             Explorer le projet <span aria-hidden="true">↗</span>
           </a>
         </div>
       </section>
 
-      <section class="download-section section-wrap">
+      <!-- Téléchargement -->
+      <section class="section wrap" data-reveal>
         <div class="download-card">
-          <span class="section-label">PRÊT À JOUER ?</span>
+          <div class="dl-posters left poster-row" data-covers="fortnite,hades,celeste" aria-hidden="true"></div>
+          <div class="dl-posters right poster-row" data-covers="elden,cs2,hollow" aria-hidden="true"></div>
+          <img class="brand-mark" src="./assets/relay-mark.svg" alt="" width="64" height="64" />
           <h2>Vos jeux vous attendent.</h2>
           <p>Relay arrive bientôt sur Windows.</p>
           <a class="button button-primary is-disabled" id="download-link-bottom" href="https://github.com/Fuzoxxxxxxxx/relay/releases" aria-disabled="true">
-            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2.5v10m0 0 4-4m-4 4-4-4M3 14v2.5h14V14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="m7 10 5 5 5-5" /><path d="M12 15V3" /></svg>
             <span id="download-label-bottom">Bientôt disponible</span>
           </a>
           <div class="download-meta" id="release-meta" aria-live="polite">Windows 10/11 · Installation standard</div>
         </div>
       </section>
 
-      <section class="faq section-wrap" id="faq">
+      <!-- FAQ -->
+      <section class="section wrap faq" id="faq" data-reveal>
         <div class="faq-heading">
-          <span class="section-label">BON À SAVOIR</span>
-          <h2>Quelques <span class="highlight">questions.</span></h2>
+          <span class="eyebrow">Bon à savoir</span>
+          <h2>Quelques <span class="grad">questions.</span></h2>
         </div>
         <div class="faq-list">
           <details>
             <summary>Quelles plateformes sont prises en charge ?</summary>
             <p>Relay détecte les jeux installés depuis Steam, Epic Games et Riot Games, et permet aussi d’ajouter des jeux locaux. La prise en charge varie selon la plateforme.</p>
+          </details>
+          <details>
+            <summary>Et Xbox, Ubisoft Connect, EA app, GOG Galaxy ou Battle.net ?</summary>
+            <p>Ces plateformes sont prévues comme points d’extension, mais leur détection, leur import et leur lancement ne sont pas encore disponibles.</p>
           </details>
           <details>
             <summary>Dois-je connecter mes comptes ?</summary>
@@ -240,16 +349,16 @@
           </details>
           <details>
             <summary>Comment les mises à jour sont-elles distribuées ?</summary>
-            <p>Les nouvelles versions seront publiées dans les releases GitHub. Les installations standard de Relay pourront ensuite les détecter automatiquement.</p>
+            <p>Les nouvelles versions sont publiées dans les releases GitHub. Les installations standard de Relay peuvent ensuite les détecter automatiquement ; la version portable ne reçoit pas ces mises à jour.</p>
           </details>
         </div>
       </section>
     </main>
 
     <footer class="site-footer">
-      <div class="section-wrap footer-content">
-        <a class="brand footer-brand" href="#accueil" aria-label="Relay, accueil">
-          <img class="brand-mark" src="./assets/relay-mark.svg" alt="" width="34" height="34" />
+      <div class="wrap footer-content">
+        <a class="brand" href="#accueil" aria-label="Relay, accueil">
+          <img class="brand-mark" src="./assets/relay-mark.svg" alt="" width="32" height="32" />
           <span class="brand-name">Relay</span>
         </a>
         <span class="footer-copy">Vos jeux, enfin réunis.</span>
@@ -259,6 +368,7 @@
         </div>
       </div>
     </footer>
+    <script src="./assets/games/manifest.js"></script>
     <script src="./script.js" defer></script>
   </body>
 </html>
