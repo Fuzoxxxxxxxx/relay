@@ -39,12 +39,14 @@ async function loadLatestRelease() {
     })
     if (response.status === 404) {
       status.textContent = 'La première version n’est pas encore publiée. Consultez les releases GitHub pour suivre sa sortie.'
+      renderAssets([])
       return
     }
     if (!response.ok) throw new Error(`GitHub API: ${response.status}`)
 
     const release = await response.json()
     const assets = Array.isArray(release.assets) ? release.assets : []
+    renderAssets(assets)
     const installer = assets.find((asset) => /^Relay-Setup-.*\.exe$/i.test(asset.name))
       ?? assets.find((asset) => /\.exe$/i.test(asset.name))
     if (!installer?.browser_download_url) {
@@ -60,10 +62,121 @@ async function loadLatestRelease() {
   } catch (error) {
     console.error('Impossible de récupérer la dernière release Relay :', error)
     if (status) status.textContent = 'Impossible de vérifier le téléchargement pour le moment. Consultez les releases GitHub.'
+    renderAssets(null)
   }
 }
 
 if (primaryLink && status) loadLatestRelease()
+
+/* Liste des fichiers de la dernière version */
+const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char])
+const formatSize = (bytes) => (bytes >= 1048576 ? `${(bytes / 1048576).toFixed(1).replace('.', ',')} Mo` : `${Math.max(1, Math.round(bytes / 1024))} Ko`)
+const longDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long' })
+const RELEASES_URL = `https://github.com/${owner}/${repository}/releases`
+
+function renderAssets(assets) {
+  const list = document.querySelector('#asset-list')
+  if (!list) return
+  if (assets === null) {
+    list.innerHTML = `<div class="asset-empty">Liste indisponible. Consultez les <a href="${RELEASES_URL}" target="_blank" rel="noreferrer">releases GitHub</a>.</div>`
+    return
+  }
+  const files = assets.filter((asset) => !/\.(blockmap|ya?ml)$/i.test(asset.name))
+  if (!files.length) {
+    list.innerHTML = '<div class="asset-empty">Aucun fichier à télécharger pour le moment.</div>'
+    return
+  }
+  const icon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>'
+  const title = (name) => (/setup|install/i.test(name) ? 'Installateur Windows (recommandé)' : /portable/i.test(name) ? 'Version portable' : 'Fichier de la version')
+  list.innerHTML = files.map((asset) => `<div class="asset"><span class="asset-icon">${icon}</span>
+    <div class="asset-info"><strong>${escapeHtml(title(asset.name))}</strong><span>${escapeHtml(asset.name)} · ${formatSize(asset.size)}</span></div>
+    <a class="button button-small" href="${escapeHtml(asset.browser_download_url)}">Télécharger</a></div>`).join('')
+}
+
+/* Nouveautés : notes des dernières releases (Markdown minimal et sûr) */
+function mdInline(text) {
+  return escapeHtml(text)
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer">$1</a>')
+    .replace(/(^|[\s(])(https?:\/\/[^\s<)]+)/g, '$1<a href="$2" target="_blank" rel="noreferrer">$2</a>')
+}
+
+function mdBlocks(source) {
+  let html = ''
+  let inList = false
+  let paragraph = []
+  const flush = () => {
+    if (paragraph.length) html += `<p>${mdInline(paragraph.join(' '))}</p>`
+    paragraph = []
+  }
+  const closeList = () => {
+    if (inList) html += '</ul>'
+    inList = false
+  }
+  for (const raw of String(source).replace(/\r\n/g, '\n').split('\n')) {
+    const line = raw.trimEnd()
+    const heading = line.match(/^(#{1,4})\s+(.*)$/)
+    const item = line.match(/^\s*[-*+]\s+(.*)$/)
+    if (heading) {
+      flush(); closeList()
+      const level = Math.min(heading[1].length + 2, 5)
+      html += `<h${level}>${mdInline(heading[2])}</h${level}>`
+    } else if (item) {
+      flush()
+      if (!inList) { html += '<ul>'; inList = true }
+      html += `<li>${mdInline(item[1])}</li>`
+    } else if (!line.trim()) {
+      flush(); closeList()
+    } else {
+      closeList()
+      paragraph.push(line.trim())
+    }
+  }
+  flush(); closeList()
+  return html
+}
+
+async function loadNews() {
+  const container = document.querySelector('#news-list')
+  if (!container) return
+  try {
+    const response = await fetch(`https://api.github.com/repos/${owner}/${repository}/releases?per_page=4`, { headers: { Accept: 'application/vnd.github+json' }, cache: 'no-store' })
+    if (response.status === 404) throw Object.assign(new Error('introuvable'), { empty: true })
+    if (!response.ok) throw new Error(`GitHub API: ${response.status}`)
+    const releases = await response.json()
+    if (!releases.length) throw Object.assign(new Error('vide'), { empty: true })
+
+    const [latest, ...older] = releases
+    const dateOf = (release) => (release.published_at ? longDate.format(new Date(release.published_at)) : '')
+    const titleOf = (release) => (release.name && release.name !== release.tag_name ? release.name : `Version ${release.tag_name}`)
+    const body = latest.body?.trim() ? mdBlocks(latest.body) : '<p>Aucune note de version n’a été fournie pour cette release.</p>'
+
+    container.innerHTML = `<article class="news-latest">
+        <div class="news-meta">
+          <span class="news-tag">${escapeHtml(latest.tag_name)}</span>
+          ${dateOf(latest) ? `<time datetime="${escapeHtml(latest.published_at)}">${dateOf(latest)}</time>` : ''}
+          ${latest.prerelease ? '<span class="news-badge pre">Pré-version</span>' : '<span class="news-badge">Dernière version</span>'}
+        </div>
+        <h3>${escapeHtml(titleOf(latest))}</h3>
+        <div class="news-body">${body}</div>
+        <a class="news-link" href="${escapeHtml(latest.html_url)}" target="_blank" rel="noreferrer">Notes complètes sur GitHub ↗</a>
+      </article>
+      ${older.slice(0, 3).map((release) => `<a class="news-row" href="${escapeHtml(release.html_url)}" target="_blank" rel="noreferrer">
+        <span class="news-tag">${escapeHtml(release.tag_name)}</span><strong>${escapeHtml(titleOf(release))}</strong><time>${dateOf(release)}</time></a>`).join('')}
+      <p class="news-all"><a class="news-link" href="${RELEASES_URL}" target="_blank" rel="noreferrer">Tout l’historique sur GitHub ↗</a></p>`
+
+    const bodyElement = container.querySelector('.news-body')
+    if (bodyElement && bodyElement.scrollHeight > bodyElement.clientHeight + 4) bodyElement.classList.add('is-clamped')
+  } catch (error) {
+    if (!error.empty) console.error('Impossible de charger les nouveautés :', error)
+    container.innerHTML = error.empty
+      ? '<div class="news-state"><strong>Aucune version publiée pour l’instant</strong>Les notes de chaque version apparaîtront ici dès la première release.</div>'
+      : `<div class="news-state"><strong>Nouveautés momentanément indisponibles</strong>Consultez directement les <a href="${RELEASES_URL}" target="_blank" rel="noreferrer">releases GitHub</a>.</div>`
+  }
+}
+
+loadNews()
 
 /* ---------- 2. Images de jeux ----------
    Les jaquettes viennent du CDN public de Steam (comme dans l'application), avec un
@@ -480,6 +593,15 @@ document.addEventListener('error', async (event) => {
 })()
 
 hydrateImages(document)
+
+/* Aperçu local (fichier ouvert directement, ou serveur de développement comme live-server) : on garde le .html dans les liens. */
+if (window.location.protocol === 'file:' || ['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname)) {
+  document.querySelectorAll('a[href]').forEach((link) => {
+    const href = link.getAttribute('href')
+    if (/^\.\/(documentation|support|confidentialite)(#.*)?$/.test(href)) link.setAttribute('href', href.replace(/^(\.\/[a-z]+)/, '$1.html'))
+    else if (/^\.\/(#.*)?$/.test(href)) link.setAttribute('href', `./index.html${href.slice(2)}`)
+  })
+}
 
 /* ---------- 3. Effets de page ---------- */
 
