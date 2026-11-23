@@ -9,7 +9,7 @@
 
 const owner = 'Fuzoxxxxxxxx'
 const repository = 'relay'
-const apiUrl = `https://api.github.com/repos/${owner}/${repository}/releases/latest`
+const apiUrl = `https://api.github.com/repos/${owner}/${repository}/releases?per_page=10`
 const installerCacheKey = 'relay.last-valid-installer'
 const fallbackInstallerUrl = `https://github.com/${owner}/${repository}/releases/download/v0.1.1/Relay-Setup-0.1.1.exe`
 
@@ -58,20 +58,38 @@ function setDownload(assetUrl, label, details) {
 
 setDownload(getLastValidInstallerUrl(), 'Télécharger pour Windows', 'Téléchargement disponible · vérification de la version…')
 
-async function loadLatestRelease() {
+async function loadReleases() {
   try {
-    const response = await fetch(apiUrl, {
-      headers: { Accept: 'application/vnd.github+json' },
-      cache: 'no-store',
-    })
+    const controller = new AbortController()
+    const timeout = window.setTimeout(() => controller.abort(), 10000)
+    let response
+    try {
+      response = await fetch(apiUrl, {
+        headers: { Accept: 'application/vnd.github+json' },
+        signal: controller.signal,
+      })
+    } finally {
+      window.clearTimeout(timeout)
+    }
     if (response.status === 404) {
       status.textContent = 'La dernière version est introuvable pour le moment. Le lien de téléchargement précédent reste disponible.'
       renderAssets([])
+      renderNews([])
       return
     }
     if (!response.ok) throw new Error(`GitHub API: ${response.status}`)
 
-    const release = await response.json()
+    const releases = await response.json()
+    if (!Array.isArray(releases)) throw new Error('GitHub API: réponse de releases invalide')
+    renderNews(releases.slice(0, 4))
+
+    const release = releases.find((item) => !item.draft && !item.prerelease)
+    if (!release) {
+      status.textContent = 'Aucune version stable n’est disponible. Le lien de téléchargement précédent reste disponible.'
+      renderAssets([])
+      return
+    }
+
     const assets = Array.isArray(release.assets) ? release.assets : []
     renderAssets(assets)
     const installer = assets.find((asset) => /^Relay-Setup-.*\.exe$/i.test(asset.name))
@@ -90,10 +108,11 @@ async function loadLatestRelease() {
     console.error('Impossible de récupérer la dernière release Relay :', error)
     if (status) status.textContent = 'Impossible de vérifier la dernière version. Le lien de téléchargement précédent reste disponible.'
     renderAssets(null)
+    renderNewsError()
   }
 }
 
-if (primaryLink && status) loadLatestRelease()
+if (primaryLink && status) loadReleases()
 
 /* Liste des fichiers de la dernière version */
 const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char])
@@ -164,46 +183,42 @@ function mdBlocks(source) {
   return html
 }
 
-async function loadNews() {
+function renderNews(releases) {
   const container = document.querySelector('#news-list')
   if (!container) return
-  try {
-    const response = await fetch(`https://api.github.com/repos/${owner}/${repository}/releases?per_page=4`, { headers: { Accept: 'application/vnd.github+json' }, cache: 'no-store' })
-    if (response.status === 404) throw Object.assign(new Error('introuvable'), { empty: true })
-    if (!response.ok) throw new Error(`GitHub API: ${response.status}`)
-    const releases = await response.json()
-    if (!releases.length) throw Object.assign(new Error('vide'), { empty: true })
-
-    const [latest, ...older] = releases
-    const dateOf = (release) => (release.published_at ? longDate.format(new Date(release.published_at)) : '')
-    const titleOf = (release) => (release.name && release.name !== release.tag_name ? release.name : `Version ${release.tag_name}`)
-    const body = latest.body?.trim() ? mdBlocks(latest.body) : '<p>Aucune note de version n’a été fournie pour cette release.</p>'
-
-    container.innerHTML = `<article class="news-latest">
-        <div class="news-meta">
-          <span class="news-tag">${escapeHtml(latest.tag_name)}</span>
-          ${dateOf(latest) ? `<time datetime="${escapeHtml(latest.published_at)}">${dateOf(latest)}</time>` : ''}
-          ${latest.prerelease ? '<span class="news-badge pre">Pré-version</span>' : '<span class="news-badge">Dernière version</span>'}
-        </div>
-        <h3>${escapeHtml(titleOf(latest))}</h3>
-        <div class="news-body">${body}</div>
-        <a class="news-link" href="${escapeHtml(latest.html_url)}" target="_blank" rel="noreferrer">Notes complètes sur GitHub ↗</a>
-      </article>
-      ${older.slice(0, 3).map((release) => `<a class="news-row" href="${escapeHtml(release.html_url)}" target="_blank" rel="noreferrer">
-        <span class="news-tag">${escapeHtml(release.tag_name)}</span><strong>${escapeHtml(titleOf(release))}</strong><time>${dateOf(release)}</time></a>`).join('')}
-      <p class="news-all"><a class="news-link" href="${RELEASES_URL}" target="_blank" rel="noreferrer">Tout l’historique sur GitHub ↗</a></p>`
-
-    const bodyElement = container.querySelector('.news-body')
-    if (bodyElement && bodyElement.scrollHeight > bodyElement.clientHeight + 4) bodyElement.classList.add('is-clamped')
-  } catch (error) {
-    if (!error.empty) console.error('Impossible de charger les nouveautés :', error)
-    container.innerHTML = error.empty
-      ? '<div class="news-state"><strong>Aucune version publiée pour l’instant</strong>Les notes de chaque version apparaîtront ici dès la première release.</div>'
-      : `<div class="news-state"><strong>Nouveautés momentanément indisponibles</strong>Consultez directement les <a href="${RELEASES_URL}" target="_blank" rel="noreferrer">releases GitHub</a>.</div>`
+  if (!releases.length) {
+    container.innerHTML = '<div class="news-state"><strong>Aucune version publiée pour l’instant</strong>Les notes de chaque version apparaîtront ici dès la première release.</div>'
+    return
   }
+
+  const [latest, ...older] = releases
+  const dateOf = (release) => (release.published_at ? longDate.format(new Date(release.published_at)) : '')
+  const titleOf = (release) => (release.name && release.name !== release.tag_name ? release.name : `Version ${release.tag_name}`)
+  const body = latest.body?.trim() ? mdBlocks(latest.body) : '<p>Aucune note de version n’a été fournie pour cette release.</p>'
+
+  container.innerHTML = `<article class="news-latest">
+      <div class="news-meta">
+        <span class="news-tag">${escapeHtml(latest.tag_name)}</span>
+        ${dateOf(latest) ? `<time datetime="${escapeHtml(latest.published_at)}">${dateOf(latest)}</time>` : ''}
+        ${latest.prerelease ? '<span class="news-badge pre">Pré-version</span>' : '<span class="news-badge">Dernière version</span>'}
+      </div>
+      <h3>${escapeHtml(titleOf(latest))}</h3>
+      <div class="news-body">${body}</div>
+      <a class="news-link" href="${escapeHtml(latest.html_url)}" target="_blank" rel="noreferrer">Notes complètes sur GitHub ↗</a>
+    </article>
+    ${older.slice(0, 3).map((release) => `<a class="news-row" href="${escapeHtml(release.html_url)}" target="_blank" rel="noreferrer">
+      <span class="news-tag">${escapeHtml(release.tag_name)}</span><strong>${escapeHtml(titleOf(release))}</strong><time>${dateOf(release)}</time></a>`).join('')}
+    <p class="news-all"><a class="news-link" href="${RELEASES_URL}" target="_blank" rel="noreferrer">Tout l’historique sur GitHub ↗</a></p>`
+
+  const bodyElement = container.querySelector('.news-body')
+  if (bodyElement && bodyElement.scrollHeight > bodyElement.clientHeight + 4) bodyElement.classList.add('is-clamped')
 }
 
-loadNews()
+function renderNewsError() {
+  const container = document.querySelector('#news-list')
+  if (!container) return
+  container.innerHTML = `<div class="news-state"><strong>Nouveautés momentanément indisponibles</strong>Consultez directement les <a href="${RELEASES_URL}" target="_blank" rel="noreferrer">releases GitHub</a>.</div>`
+}
 
 /* ---------- 2. Images de jeux ----------
    Les jaquettes viennent du CDN public de Steam (comme dans l'application), avec un

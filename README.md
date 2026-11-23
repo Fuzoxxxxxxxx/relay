@@ -72,7 +72,7 @@ Les jeux locaux recherchent d’abord leur illustration sur IGDB à partir du no
 
 Le site statique se trouve dans `website/` et est destiné à être hébergé sur Vercel. Lors de l’import du dépôt dans Vercel, définissez `website` comme **Root Directory** et utilisez le preset **Other**; le site ne nécessite pas de commande de build. La configuration `website/vercel.json` active les URL propres (`/documentation`, `/support`, `/confidentialite`) sans suffixe `.html` ni barre oblique finale. Les pushs sur `main` déclenchent ensuite automatiquement un déploiement.
 
-Le bouton de téléchargement utilise le dernier installateur Windows valide récupéré depuis GitHub, avec un lien de secours vers `v0.1.1` conservé dans le navigateur. Les nouvelles releases restent en brouillon pendant la construction et le téléversement; le workflow `release.yml` ne les publie qu’une fois les fichiers prêts. Le site continue donc de proposer l’ancienne release jusque-là.
+Le bouton de téléchargement utilise le dernier installateur Windows valide récupéré depuis GitHub, avec un lien de secours vers `v0.1.1` conservé dans le navigateur. Une seule requête à l’API GitHub récupère à la fois la version et les nouveautés; la réponse utilise le cache HTTP du navigateur et la vérification expire après 10 secondes. Les nouvelles releases restent en brouillon pendant la construction et le téléversement; le workflow `release.yml` ne les publie qu’une fois les fichiers prêts. Le site continue donc de proposer l’ancienne release jusque-là.
 
 Pour publier une version de l’application :
 
