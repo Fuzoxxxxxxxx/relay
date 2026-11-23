@@ -1,15 +1,19 @@
 name: Release
 
-# Se déclenche quand un tag de version est poussé (ex. v0.2.0) :
-# build de l'installeur Windows, puis publication sur GitHub Releases
-# (installeur + latest.yml + blockmap utilisés par la mise à jour automatique).
+# Publie une nouvelle version de Relay sur GitHub Releases quand on pousse un tag « v* » (ex. v0.1.1).
+# Le tag doit correspondre à la version de package.json.
 on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
 
 permissions:
   contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   release:
@@ -22,8 +26,29 @@ jobs:
           node-version: 22
           cache: npm
 
+      - name: Vérifier que le tag correspond à la version
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
+        run: |
+          VERSION="$(node -p "require('./package.json').version")"
+          if [ "${GITHUB_REF_NAME}" != "v${VERSION}" ]; then
+            echo "Le tag ${GITHUB_REF_NAME} ne correspond pas à la version ${VERSION} de package.json."
+            exit 1
+          fi
+
       - run: npm ci
 
-      - run: npm run release:win
+      - name: Générer l'icône si elle est absente
+        shell: pwsh
+        run: |
+          if (-not (Test-Path build/icon.ico)) {
+            npm i --no-save sharp
+            npm run icons
+          }
+
+      - run: npm test
+
+      - name: Construire et publier l'installateur
+        run: npm run release:win
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
