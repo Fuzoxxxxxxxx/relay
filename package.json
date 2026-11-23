@@ -1,7 +1,7 @@
 {
   "name": "relay",
   "private": true,
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Launcher desktop de bibliothèque de jeux multi-plateforme",
   "main": "dist-electron/main/main.js",
   "scripts": {
