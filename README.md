@@ -70,7 +70,7 @@ Les jeux locaux recherchent d’abord leur illustration sur IGDB à partir du no
 
 ## Site de téléchargement
 
-Le site statique se trouve dans `website/` et est destiné à être hébergé sur Vercel. Lors de l’import du dépôt dans Vercel, définissez `website` comme **Root Directory** et utilisez le preset **Other**; le site ne nécessite pas de commande de build. Les pushs sur `main` déclenchent ensuite automatiquement un déploiement.
+Le site statique se trouve dans `website/` et est destiné à être hébergé sur Vercel. Lors de l’import du dépôt dans Vercel, définissez `website` comme **Root Directory** et utilisez le preset **Other**; le site ne nécessite pas de commande de build. La configuration `website/vercel.json` active les URL propres (`/documentation`, `/support`, `/confidentialite`) sans suffixe `.html` ni barre oblique finale. Les pushs sur `main` déclenchent ensuite automatiquement un déploiement.
 
 Le bouton de téléchargement récupère la dernière release publique et son installateur Windows depuis GitHub. Il reste indisponible jusqu’à la publication d’une première version NSIS. Pour publier une version, incrémentez `version` dans `package.json`, poussez un tag correspondant (par exemple `v0.1.1`) et le workflow `release.yml` construira et publiera l’installateur.
 
