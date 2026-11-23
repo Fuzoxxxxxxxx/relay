@@ -48,6 +48,15 @@ jobs:
 
       - run: npm test
 
+      - name: Préparer le brouillon de release GitHub
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $tag = $env:GITHUB_REF_NAME
+          gh release create $tag --verify-tag --title "Relay $tag" --notes "Version $tag de Relay." --draft
+
       - name: Construire et publier l'installateur
         run: npm run release:win
         env:
