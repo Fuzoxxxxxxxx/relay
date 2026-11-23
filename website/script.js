@@ -10,6 +10,26 @@
 const owner = 'Fuzoxxxxxxxx'
 const repository = 'relay'
 const apiUrl = `https://api.github.com/repos/${owner}/${repository}/releases/latest`
+const installerCacheKey = 'relay.last-valid-installer'
+const fallbackInstallerUrl = `https://github.com/${owner}/${repository}/releases/download/v0.1.1/Relay-Setup-0.1.1.exe`
+
+function getLastValidInstallerUrl() {
+  try {
+    const cachedUrl = localStorage.getItem(installerCacheKey)
+    if (cachedUrl) {
+      const parsedUrl = new URL(cachedUrl)
+      const fileName = parsedUrl.pathname.split('/').pop() ?? ''
+      if (
+        parsedUrl.origin === 'https://github.com'
+        && parsedUrl.pathname.startsWith(`/${owner}/${repository}/releases/download/`)
+        && /^Relay-Setup-.*\.exe$/i.test(fileName)
+      ) return cachedUrl
+    }
+  } catch (error) {
+    console.warn('Impossible de lire le dernier installateur mémorisé :', error)
+  }
+  return fallbackInstallerUrl
+}
 
 const primaryLink = document.querySelector('#download-link')
 const secondaryLink = document.querySelector('#download-link-bottom')
@@ -19,6 +39,11 @@ const status = document.querySelector('#download-status')
 const releaseMeta = document.querySelector('#release-meta')
 
 function setDownload(assetUrl, label, details) {
+  try {
+    localStorage.setItem(installerCacheKey, assetUrl)
+  } catch (error) {
+    console.warn('Impossible de mémoriser le dernier installateur Relay :', error)
+  }
   for (const link of [primaryLink, secondaryLink]) {
     if (!link) continue
     link.href = assetUrl
@@ -31,6 +56,8 @@ function setDownload(assetUrl, label, details) {
   if (releaseMeta) releaseMeta.textContent = details
 }
 
+setDownload(getLastValidInstallerUrl(), 'Télécharger pour Windows', 'Téléchargement disponible · vérification de la version…')
+
 async function loadLatestRelease() {
   try {
     const response = await fetch(apiUrl, {
@@ -38,7 +65,7 @@ async function loadLatestRelease() {
       cache: 'no-store',
     })
     if (response.status === 404) {
-      status.textContent = 'La première version n’est pas encore publiée. Consultez les releases GitHub pour suivre sa sortie.'
+      status.textContent = 'La dernière version est introuvable pour le moment. Le lien de téléchargement précédent reste disponible.'
       renderAssets([])
       return
     }
@@ -50,8 +77,8 @@ async function loadLatestRelease() {
     const installer = assets.find((asset) => /^Relay-Setup-.*\.exe$/i.test(asset.name))
       ?? assets.find((asset) => /\.exe$/i.test(asset.name))
     if (!installer?.browser_download_url) {
-      status.textContent = `La version ${release.tag_name} est publiée, mais son installateur Windows n’est pas encore disponible.`
-      releaseMeta.textContent = `Version ${release.tag_name} · installateur en attente`
+      status.textContent = `La version ${release.tag_name} n’a pas encore d’installateur. Le lien précédent reste disponible.`
+      releaseMeta.textContent = 'Version précédente conservée'
       return
     }
 
@@ -61,7 +88,7 @@ async function loadLatestRelease() {
     setDownload(installer.browser_download_url, 'Télécharger pour Windows', `Version ${release.tag_name} · publiée le ${date}`)
   } catch (error) {
     console.error('Impossible de récupérer la dernière release Relay :', error)
-    if (status) status.textContent = 'Impossible de vérifier le téléchargement pour le moment. Consultez les releases GitHub.'
+    if (status) status.textContent = 'Impossible de vérifier la dernière version. Le lien de téléchargement précédent reste disponible.'
     renderAssets(null)
   }
 }
